@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
-import { polygon, polygonMumbai } from 'wagmi/chains'
+import { bsc, bscTestnet } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 
 import {
@@ -19,7 +19,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import '@fontsource/dela-gothic-one'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-	[import.meta.env.VITE_ENABLE_TESTNETS === 'true' ? polygonMumbai : polygon],
+	[import.meta.env.VITE_ENABLE_TESTNETS === 'true' ? bscTestnet : bsc],
 	[publicProvider()]
 )
 
@@ -42,7 +42,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 			<RainbowKitProvider
 				chains={chains}
 				theme={darkTheme({
-					accentColor: '#111',
+					accentColor: '#00D000',
 					accentColorForeground: 'white',
 					borderRadius: 'large',
 					fontStack: 'system',
