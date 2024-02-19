@@ -8,7 +8,7 @@ export default function Navbar(): JSX.Element {
 	console.log(pathname)
 
 	return (
-		<nav className='w-full bg-black py-3 flex justify-between text-white px-5 md:col-span-2'>
+		<nav className='w-full bg-black py-3 flex justify-between items-center text-white px-5 md:col-span-2'>
 			<Link to={'/'} className='flex justify-center items-center'>
 				<Logo />
 			</Link>
