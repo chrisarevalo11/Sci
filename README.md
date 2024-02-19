@@ -1,4 +1,4 @@
-# Cuadratic Sciencie - frontend
+# Sci Protocol - frontend
 
 BNB Chain Hackathon 2024
 
@@ -21,7 +21,7 @@ Prerequisites: [Node (v19 LTS)](https://nodejs.org/en/download/) and [Git](https
 > Clone the repository:
 
 ```
-git clone https://github.com/chrisarevalo11/NatureLink-Vite.git
+git clone https://github.com/chrisarevalo11/Sci-frontend.git
 ```
 
 > Install dependencies:
