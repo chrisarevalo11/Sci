@@ -1,4 +1,4 @@
-import { convertTimestampToDate } from '@/functions/utils'
+import { convertTimestampToDate } from '@/utils'
 import { Round, RoundDto } from '@/models/round.model'
 
 export function dtoToRound(dto: RoundDto): Round {
