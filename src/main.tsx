@@ -42,9 +42,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 			<RainbowKitProvider
 				chains={chains}
 				theme={darkTheme({
-					accentColor: '#00D000',
-					accentColorForeground: 'white',
-					borderRadius: 'large',
+					accentColor: '#fff',
+					accentColorForeground: '#000',
+					borderRadius: 'small',
 					fontStack: 'system',
 					overlayBlur: 'small'
 				})}

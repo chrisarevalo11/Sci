@@ -85,16 +85,15 @@ export default function Layout() {
 
 	return (
 		<div
-			className='min-h-dvh max-h-dvh'
+			className='min-h-dvh md:max-h-dvh flex flex-col md:grid'
 			style={{
-				display: 'grid',
 				gridTemplateRows: 'auto 1fr',
 				gridTemplateColumns: 'min(30%, 320px) 1fr'
 			}}
 		>
 			<Navbar />
 			<Sidebar />
-			<div className='overflow-y-scroll overflow-x-hidden'>
+			<div className='md:overflow-y-scroll overflow-x-hidden'>
 				<Outlet />
 			</div>
 		</div>
