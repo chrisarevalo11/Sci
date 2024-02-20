@@ -98,7 +98,7 @@ export default function Faucet(): JSX.Element {
 
 			const mintTx = await daiMockContract
 				.connect(web3Signer)
-				.mint(toDecimal(1000))
+				.mint(toDecimal(10000))
 			await mintTx.wait()
 
 			setSyncronized(false)

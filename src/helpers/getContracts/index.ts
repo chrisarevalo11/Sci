@@ -26,5 +26,12 @@ export function getContracts(): any {
 		provider
 	)
 
-	return { daiMockContract, alloContract }
+	const qVSimpleStrategyContract: any = (address: string) => {
+		return new ethers.Contract(
+			address,
+			contractsJson.qVSimpleStrategyContract.abi,
+			provider
+		)
+	}
+	return { alloContract, daiMockContract, qVSimpleStrategyContract }
 }

@@ -19,7 +19,7 @@ import {
 
 export default function Dashboard(): JSX.Element {
 	const { address } = useAccount()
-	const { addRound, getStrategiesLength } = roundsApiFirebase()
+	const { addRound, getRoundsLength } = roundsApiFirebase()
 	const { daiMockContract, alloContract } = getContracts()
 	const { getProfileByAddress } = profilesApiFirebase()
 
@@ -49,19 +49,19 @@ export default function Dashboard(): JSX.Element {
 			const profileId: string = profile?.id
 
 			const reviewThresholdTimestamp: number = toTimestamp(
-				'2024-02-21T13:30:00Z'
+				'2024-02-22T13:30:00Z'
 			)
 			const registrationStartTimestamp: number = toTimestamp(
-				'2024-02-21T14:00:00Z'
+				'2024-02-22T14:00:00Z'
 			)
 			const registrationEndTimestamp: number = toTimestamp(
-				'2024-02-21T14:30:00Z'
+				'2024-02-22T14:30:00Z'
 			)
 			const allocationStartTimestamp: number = toTimestamp(
-				'2024-02-21T15:00:00Z'
+				'2024-02-22T15:00:00Z'
 			)
 
-			const allocationEndTimestamp: number = toTimestamp('2024-02-21T15:30:00Z')
+			const allocationEndTimestamp: number = toTimestamp('2024-02-22T15:30:00Z')
 
 			const roundInitStrategyDataObject: InitializeData = {
 				registryGating: false,
@@ -99,32 +99,47 @@ export default function Dashboard(): JSX.Element {
 
 			const poolManagersAddresses: string[] = []
 
-			const createPoolWithCustomStrategyTx = await alloContract
-				.connect(web3Signer)
-				.createPoolWithCustomStrategy(
-					profileId,
-					ROUND_ADDRESS,
-					initRoundData,
-					daiMockContractAddress,
-					poolFundingAmount,
-					metadata,
-					poolManagersAddresses,
-					{
-						gasLimit: GAS_LIMIT
-					}
-				)
-			await createPoolWithCustomStrategyTx.wait()
+			// const createPoolWithCustomStrategyTx = await alloContract
+			// 	.connect(web3Signer)
+			// 	.createPoolWithCustomStrategy(
+			// 		profileId,
+			// 		ROUND_ADDRESS,
+			// 		initRoundData,
+			// 		daiMockContractAddress,
+			// 		poolFundingAmount,
+			// 		metadata,
+			// 		poolManagersAddresses,
+			// 		{
+			// 			gasLimit: GAS_LIMIT
+			// 		}
+			// 	)
+			// await createPoolWithCustomStrategyTx.wait()
 
-			const roundsLegth: number = await getStrategiesLength()
+			const roundsLegth: number = await getRoundsLength()
 			const id: number = roundsLegth + 1
-			const idString: string = id.toString()
 
 			const round: Round = {
-				id: idString,
-				address: ROUND_ADDRESS
+				address: ROUND_ADDRESS,
+				allocationEndTime: roundInitStrategyDataObject.allocationEndTime,
+				allocationStartTime: roundInitStrategyDataObject.allocationStartTime,
+				donations: 0,
+				donators: 0,
+				id,
+				image: '',
+				machingPool: 1000,
+				metadataRequired: roundInitStrategyDataObject.metadataRequired,
+				name: 'round: Ecology for Everyone',
+				profileId,
+				registrationEndTime: roundInitStrategyDataObject.registrationEndTime,
+				registrationStartTime:
+					roundInitStrategyDataObject.registrationStartTime,
+				registryGating: roundInitStrategyDataObject.registryGating,
+				reviewThreshold: roundInitStrategyDataObject.reviewThreshold
 			}
 
-			await addRound(round)
+			console.table(round)
+
+			// await addRound(round)
 			setLoading(false)
 		} catch (error) {
 			console.error(error)

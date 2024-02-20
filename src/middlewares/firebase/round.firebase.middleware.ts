@@ -16,7 +16,7 @@ export function roundsApiFirebase() {
 		}
 	}
 
-	const getStrategiesLength = async (): Promise<number> => {
+	const getRoundsLength = async (): Promise<number> => {
 		try {
 			const item = await getDocs(roundsCollectionRef)
 			return item.docs.length
@@ -26,8 +26,19 @@ export function roundsApiFirebase() {
 		}
 	}
 
+	const getLastRound = async (): Promise<Round> => {
+		try {
+			const item = await getDocs(roundsCollectionRef)
+			return item.docs[item.docs.length - 1].data() as Round
+		} catch (error) {
+			console.error('Error getting last round: ', error)
+			return {} as Round
+		}
+	}
+
 	return {
 		addRound,
-		getStrategiesLength
+		getLastRound,
+		getRoundsLength
 	}
 }
