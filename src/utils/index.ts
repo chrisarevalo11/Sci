@@ -15,3 +15,11 @@ export function convertTimestampToDate(time: number): string {
 export function formatAddress(address: string): string {
 	return address.slice(0, 6) + '...' + address.slice(-4)
 }
+
+export function toDecimal(value: number): bigint {
+	return BigInt(value * 10 ** 18)
+}
+
+export function toNumber(value: bigint): number {
+	return Number(value) / 10 ** 18
+}

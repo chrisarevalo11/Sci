@@ -2,11 +2,7 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux'
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-import { roundslice } from './slides/roundslice'
-
-const rootReducer = combineReducers({
-	roundslice: roundslice.reducer
-})
+const rootReducer = combineReducers({})
 
 export const store = configureStore({
 	reducer: rootReducer
