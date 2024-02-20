@@ -106,11 +106,15 @@ body {
 	h6 {
 		@apply text-sm;
 	}
+
+	input {
+		@apply border-b-2 border-customBlack px-3 py-2;
+	}
 }
 
 @layer components {
 	.btn {
-		@apply px-4 py-[6px] font-bold hover:scale-105 active:scale-100 transition;
+		@apply px-4 py-[6px] font-bold hover:scale-105 active:scale-100 transition disabled:opacity-75 disabled:pointer-events-none;
 	}
 
 	.btn-white {
