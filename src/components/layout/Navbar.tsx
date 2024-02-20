@@ -20,10 +20,10 @@ export default function Navbar(): JSX.Element {
 					<h6>Projects</h6>
 				</Link>
 				<Link
-					to={'/app/tokens'}
+					to={'/app/faucet'}
 					className={`hover:opacity-90 ${pathname === '/app/tokens' && 'text-customGreen pointer-events-none'}`}
 				>
-					<h6>Tokens</h6>
+					<h6>Faucet</h6>
 				</Link>
 				<Link
 					to={'/app/dashboard'}
