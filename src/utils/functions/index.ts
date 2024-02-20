@@ -1,9 +1,11 @@
 import { type ClassValue, clsx } from 'clsx'
+import { BytesLike, ethers } from 'ethers'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]): string {
 	return twMerge(clsx(inputs))
 }
+
 export function convertTimestampToDate(time: number): string {
 	const date: Date = new Date(time * 1000)
 	const year: number = date.getFullYear()
@@ -22,4 +24,13 @@ export function toDecimal(value: number): bigint {
 
 export function toNumber(value: bigint): number {
 	return Number(value) / 10 ** 18
+}
+
+export function toTimestamp(date: string): number {
+	return Math.floor(new Date(date).getTime() / 1000)
+}
+
+export function toAbiCoder(structType: string[], dataValues: any[]): BytesLike {
+	const abiCoder = new ethers.AbiCoder()
+	return abiCoder.encode(structType, dataValues)
 }

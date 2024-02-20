@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 
-import { getContracts } from '@/functions/helpers/getContracts'
-import { toDecimal, toNumber } from '@/functions/utils'
+import { getContracts } from '@/helpers/getContracts'
+import { toDecimal, toNumber } from '@/utils/functions'
 
 export default function Faucet(): JSX.Element {
 	const { address } = useAccount()
@@ -110,9 +110,11 @@ export default function Faucet(): JSX.Element {
 	}
 
 	useEffect(() => {
-		;(async () => {
-			await getStates()
-		})()
+		if (address) {
+			;(async () => {
+				await getStates()
+			})()
+		}
 	}, [address, syncronized])
 
 	return (

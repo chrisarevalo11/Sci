@@ -4,6 +4,7 @@ import Home from '@/components/home/Home'
 import Layout from '@/components/layout/Layout'
 import Projects from '@/components/projects/Projects'
 
+import Dashboard from './pages/Dashborad'
 import Faucet from './pages/Faucet'
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
 				<Route path='/app' element={<Layout />}>
 					<Route path='projects' element={<Projects />} />
 					<Route path='faucet' element={<Faucet />} />
-					<Route path='dashboard' element={<h1>Dashboard</h1>} />
+					<Route path='dashboard' element={<Dashboard />} />
 				</Route>
 			</Routes>
 		</HashRouter>

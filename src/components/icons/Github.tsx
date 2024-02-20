@@ -1,4 +1,4 @@
-import { cn } from '@/functions/utils'
+import { cn } from '@/utils/functions'
 
 export default function Github({
 	className
