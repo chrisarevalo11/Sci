@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/getContracts'
+import { getRpcProvider } from '@/helpers/relay'
 import { profilesApiFirebase } from '@/middlewares/firebase/profile.firebase.middleware'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { InitializeData } from '@/models/initialize-data.mode'
@@ -20,7 +21,8 @@ import {
 export default function Dashboard(): JSX.Element {
 	const { address } = useAccount()
 	const { addRound, getRoundsLength } = roundsApiFirebase()
-	const { daiMockContract, alloContract } = getContracts()
+	const { daiMockContract, alloContract, qVSimpleStrategyContract } =
+		getContracts()
 	const { getProfileByAddress } = profilesApiFirebase()
 
 	const [profile, setProfile] = useState<Profile | null>(null)
@@ -99,21 +101,27 @@ export default function Dashboard(): JSX.Element {
 
 			const poolManagersAddresses: string[] = []
 
-			// const createPoolWithCustomStrategyTx = await alloContract
-			// 	.connect(web3Signer)
-			// 	.createPoolWithCustomStrategy(
-			// 		profileId,
-			// 		ROUND_ADDRESS,
-			// 		initRoundData,
-			// 		daiMockContractAddress,
-			// 		poolFundingAmount,
-			// 		metadata,
-			// 		poolManagersAddresses,
-			// 		{
-			// 			gasLimit: GAS_LIMIT
-			// 		}
-			// 	)
-			// await createPoolWithCustomStrategyTx.wait()
+			const createPoolWithCustomStrategyTx = await alloContract
+				.connect(web3Signer)
+				.createPoolWithCustomStrategy(
+					profileId,
+					ROUND_ADDRESS,
+					initRoundData,
+					daiMockContractAddress,
+					poolFundingAmount,
+					metadata,
+					poolManagersAddresses,
+					{
+						gasLimit: GAS_LIMIT
+					}
+				)
+			await createPoolWithCustomStrategyTx.wait()
+
+			const currentQvSimpleStrategyContract =
+				qVSimpleStrategyContract(ROUND_ADDRESS).connect(web3Signer)
+
+			const poolId: bigint = await currentQvSimpleStrategyContract.getPoolId()
+			const poolIdNumber: number = Number(poolId)
 
 			const roundsLegth: number = await getRoundsLength()
 			const id: number = roundsLegth + 1
@@ -129,6 +137,7 @@ export default function Dashboard(): JSX.Element {
 				machingPool: 1000,
 				metadataRequired: roundInitStrategyDataObject.metadataRequired,
 				name: 'round: Ecology for Everyone',
+				poolId: poolIdNumber,
 				profileId,
 				registrationEndTime: roundInitStrategyDataObject.registrationEndTime,
 				registrationStartTime:
@@ -137,7 +146,7 @@ export default function Dashboard(): JSX.Element {
 				reviewThreshold: roundInitStrategyDataObject.reviewThreshold
 			}
 
-			// await addRound(round)
+			await addRound(round)
 			setLoading(false)
 		} catch (error) {
 			console.error(error)

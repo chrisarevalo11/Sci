@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
-import { ethers } from 'ethers'
+import { BytesLike, ethers, ZeroAddress } from 'ethers'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/getContracts'
-import { getRpcProvider } from '@/helpers/relay'
-import { toDecimal, toNumber } from '@/utils/functions'
+import { RecipientData } from '@/models/recipient-data.model'
+import { toAbiCoder, toDecimal, toNumber } from '@/utils/functions'
+import { RECIPIENT_DATA_STRUCT_TYPES } from '@/utils/variables/constants'
 
-export default function Faucet(): JSX.Element {
+export default function CreateProject(): JSX.Element {
 	const { address } = useAccount()
 	const { daiMockContract, alloContract } = getContracts()
 
@@ -54,56 +55,45 @@ export default function Faucet(): JSX.Element {
 		}
 	}
 
-	const onApprove = async () => {
-		try {
-			setLoading(true)
-			const ethereum = (window as any).ethereum
-
-			if (!ethereum) {
-				alert('Ethereum object not found')
-				return
-			}
-
-			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
-				ethereum
-			)
-			await web3Provider.send('eth_requestAccounts', [])
-			const web3Signer: ethers.JsonRpcSigner = await web3Provider.getSigner()
-
-			const approveTx = await daiMockContract
-				.connect(web3Signer)
-				.approve(alloContract.target, toDecimal(1000))
-			await approveTx.wait()
-
-			setSyncronized(false)
-		} catch (error) {
-			console.error(error)
-			alert('Error: Look at console')
-			setLoading(false)
-		}
-	}
-
-	const onMint = async () => {
+	const onRegisterRecipient = async () => {
 		try {
 			setLoading(true)
 
-			const ethereum = (window as any).ethereum
+			const banner: string = ''
+			const description: string =
+				'Interpolation of field information with satellite information'
+			const github: string = 'www.github.com/recipients'
+			const logo: string = ''
+			const name: string = 'Recipients'
+			const slogan: string = 'Gaia is our home'
+			const tags: string[] = ['satellite', 'field']
+			const twitter: string = 'www.twitter.com/recipients'
+			const website: string = 'www.recipients.com'
 
-			if (!ethereum) {
-				alert('Ethereum object not found')
-				return
+			if (!address) return
+
+			const recipientDataObject: RecipientData = {
+				recipientId: address,
+				recipientAddress: ZeroAddress,
+				metadata: {
+					protocol: BigInt(1),
+					pointer: 'ipfs://QmQmQmQmQmQmQmQmQmQmQmQmQm'
+				}
 			}
 
-			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
-				ethereum
-			)
-			await web3Provider.send('eth_requestAccounts', [])
-			const web3Signer: ethers.JsonRpcSigner = await web3Provider.getSigner()
+			const recipientDataArray: any[] = [
+				recipientDataObject.recipientId,
+				recipientDataObject.recipientAddress,
+				[
+					recipientDataObject.metadata.protocol,
+					recipientDataObject.metadata.pointer
+				]
+			]
 
-			const mintTx = await daiMockContract
-				.connect(web3Signer)
-				.mint(toDecimal(10000))
-			await mintTx.wait()
+			const recipientData: BytesLike = toAbiCoder(
+				RECIPIENT_DATA_STRUCT_TYPES,
+				recipientDataArray
+			)
 
 			setSyncronized(false)
 		} catch (error) {
@@ -116,7 +106,6 @@ export default function Faucet(): JSX.Element {
 	useEffect(() => {
 		if (address) {
 			;(async () => {
-				getRpcProvider()
 				await getStates()
 			})()
 		} else {
@@ -126,18 +115,14 @@ export default function Faucet(): JSX.Element {
 
 	return (
 		<div>
-			<h1>Faucet</h1>
+			<h1>Create Project</h1>
 			{loading ? (
 				<h1>Loading...</h1>
 			) : (
 				<div>
-					<h2>Balance: {balance}</h2>
-					<h2>Allowance: {allowance}</h2>
 					<h4>Sci Address: {sciAddress}</h4>
 					<br />
-					<button onClick={onMint}>Mint</button>
-					<br />
-					<button onClick={onApprove}>Approve</button>
+					<button onClick={onRegisterRecipient}>registerRecipient</button>
 				</div>
 			)}
 		</div>

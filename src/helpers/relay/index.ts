@@ -20,9 +20,16 @@ function getRpcUrl(): string {
 	return import.meta.env.VITE_BSC_TESTNET_RPC_URL
 }
 
+export function getRpcProvider(): ethers.JsonRpcProvider {
+	// const rpcUrl: string = getRpcUrl()
+
+	const rpcUrl = '/api'
+	return new ethers.JsonRpcProvider(rpcUrl)
+}
+
 export async function createQvSimpleStrategyContract(): Promise<string> {
 	try {
-		const { addRound, getStrategiesLength } = roundsApiFirebase()
+		const { addRound, getRoundsLength } = roundsApiFirebase()
 		const privateKey: string = getPrivateKey()
 		const rpcUrl: string = getRpcUrl()
 
@@ -34,7 +41,7 @@ export async function createQvSimpleStrategyContract(): Promise<string> {
 			signer
 		)
 
-		const roundsLegth: number = await getStrategiesLength()
+		const roundsLegth: number = await getRoundsLength()
 		const id: number = roundsLegth + 1
 		const idString: string = id.toString()
 

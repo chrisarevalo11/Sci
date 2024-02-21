@@ -9,6 +9,7 @@ export interface Round {
 	machingPool: number
 	metadataRequired: boolean
 	name: string
+	poolId: number
 	profileId: string
 	registrationEndTime: number
 	registrationStartTime: number
