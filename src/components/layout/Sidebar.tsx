@@ -30,11 +30,7 @@ export default function Sidebar(): JSX.Element {
 	}
 
 	useEffect(() => {
-		if (address) {
-			;(async () => {
-				getStates()
-			})()
-		}
+		getStates()
 	}, [])
 
 	return (
