@@ -14,6 +14,6 @@ export const RECIPIENT_DATA_STRUCT_TYPES: string[] = [
 	'tuple(uint256, string)'
 ]
 
-export const ROUND_ADDRESS = '0x02f199C37a789CD0Bb202b58d7141adAcF36C4ce'
+export const ROUND_ADDRESS = '0xa0Cc0Bc6851C2d9924dAaDF60dBd0C63115F61DC'
 
 export const SCI_ADMIN_ADDRESS = '0x7753E5f36f20B14fFb6b6a61319Eb66f63abdb0b'

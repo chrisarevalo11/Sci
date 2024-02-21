@@ -1,6 +1,6 @@
 import Github from '@/components/icons/Github'
 import Globe from '@/components/icons/Globe'
-import Container from '@/components/ui/Container'
+import Container from '@/components/projects/ui/Container'
 
 export default function Footer(): JSX.Element {
 	return (

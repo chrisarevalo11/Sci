@@ -22,12 +22,8 @@ export function convertFileToBase64(
 	}
 }
 
-export function convertTimestampToDate(time: number): string {
-	const date: Date = new Date(time * 1000)
-	const year: number = date.getFullYear()
-	const month: string = (date.getMonth() + 1).toString().padStart(2, '0')
-	const day: string = date.getDate().toString().padStart(2, '0')
-	return `${year}-${month}-${day}`
+export function convertTimestampToDate(time: number): Date {
+	return new Date(time * 1000)
 }
 
 export function formatAddress(address: string): string {

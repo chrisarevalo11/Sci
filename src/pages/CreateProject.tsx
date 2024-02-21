@@ -4,47 +4,31 @@ import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/getContracts'
+import { registerRecipient, reviewRecipients } from '@/helpers/relay'
+import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
+import { Project } from '@/models/project.model'
 import { RecipientData } from '@/models/recipient-data.model'
-import { toAbiCoder, toDecimal, toNumber } from '@/utils/functions'
+import { Round } from '@/models/round.model'
+import { toAbiCoder } from '@/utils/functions'
 import { RECIPIENT_DATA_STRUCT_TYPES } from '@/utils/variables/constants'
+import { Status } from '@/utils/variables/enums'
 
 export default function CreateProject(): JSX.Element {
 	const { address } = useAccount()
+	const { getLastRound, updateRound } = roundsApiFirebase()
+
 	const { daiMockContract, alloContract } = getContracts()
 
 	const navigate = useNavigate()
 
-	const [allowance, setAllowance] = useState<number>(0)
-	const [balance, setBalance] = useState<number>(0)
 	const [loading, setLoading] = useState<boolean>(true)
-	const [sciAddress, setSciAddress] = useState<string>('')
+	const [round, setRound] = useState<Round | null>(null)
 	const [syncronized, setSyncronized] = useState<boolean>(false)
 
 	const getStates = async () => {
 		try {
-			const ethereum = (window as any).ethereum
-
-			if (!ethereum) {
-				alert('Ethereum object not found')
-				return
-			}
-
-			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
-				ethereum
-			)
-
-			const allowance: number = toNumber(
-				await daiMockContract
-					.connect(web3Provider)
-					.allowance(address, alloContract.target)
-			)
-			setAllowance(allowance)
-
-			const balanceOf: number = toNumber(
-				await daiMockContract.connect(web3Provider).balanceOf(address)
-			)
-			setBalance(balanceOf)
-			setSciAddress(alloContract.target)
+			const lastRound: Round = await getLastRound()
+			setRound(lastRound)
 
 			setSyncronized(true)
 			setLoading(false)
@@ -95,7 +79,39 @@ export default function CreateProject(): JSX.Element {
 				recipientDataArray
 			)
 
-			setSyncronized(false)
+			if (!round) return
+			if (!address) return
+
+			const registerRecipientResponse: string = await registerRecipient(
+				round?.poolId,
+				recipientData
+			)
+
+			const reviewRecipientsResponse: string = await reviewRecipients(
+				[address],
+				[Status.InReview]
+			)
+
+			console.log('responseTransaction', registerRecipientResponse)
+			console.log('responseReview', reviewRecipientsResponse)
+
+			const project: Project = {
+				banner,
+				description,
+				github,
+				logo,
+				name,
+				recipientId: address,
+				slogan,
+				tags,
+				twitter,
+				website
+			}
+
+			round.projects?.push(project)
+			await updateRound(round)
+
+			setLoading(false)
 		} catch (error) {
 			console.error(error)
 			alert('Error: Look at console')

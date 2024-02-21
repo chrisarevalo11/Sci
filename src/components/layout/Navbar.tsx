@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import Logo from '@/components/ui/Logo'
+import Logo from '@/components/projects/ui/Logo'
 import { SCI_ADMIN_ADDRESS } from '@/utils/variables/constants'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 

@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi'
 import StatCard from '@/components/layout/StatCard'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Round } from '@/models/round.model'
+import { convertTimestampToDate } from '@/utils/functions'
 
 export default function Sidebar(): JSX.Element {
 	const { address } = useAccount()
@@ -14,11 +15,25 @@ export default function Sidebar(): JSX.Element {
 	const [syncronized, setSyncronized] = useState<boolean>(false)
 	const [totalPool, setTotalPool] = useState<number>(0)
 
+	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registraionEndTime, setRegistrationEndTime] = useState<Date>(
+		new Date()
+	)
+
 	const getStates = async () => {
 		try {
 			const lastRound: Round = await getLastRound()
 			setRound(lastRound)
 			setTotalPool(lastRound.machingPool + lastRound.donations)
+
+			setRegistrationStartTime(
+				new Date(convertTimestampToDate(lastRound.registrationStartTime))
+			)
+			setRegistrationEndTime(
+				new Date(convertTimestampToDate(lastRound.registrationEndTime))
+			)
 
 			setSyncronized(true)
 			setLoading(false)
@@ -49,12 +64,14 @@ export default function Sidebar(): JSX.Element {
 						<p className='flex items-center gap-2'>
 							<div
 								className={`size-2 rounded-full ${
-									new Date().getTime() < round?.registrationEndTime
+									new Date() > registraionStartTime &&
+									new Date() < registraionEndTime
 										? 'bg-green-700'
 										: 'bg-red-700'
 								}`}
 							></div>
-							{new Date().getTime() < round?.registrationEndTime
+							{new Date() > registraionStartTime &&
+							new Date() < registraionEndTime
 								? ' Opened'
 								: ' Closed'}
 						</p>

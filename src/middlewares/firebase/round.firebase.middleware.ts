@@ -1,6 +1,14 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore'
+import {
+	addDoc,
+	collection,
+	getDocs,
+	limit,
+	orderBy,
+	query
+} from 'firebase/firestore'
 
 import { database } from '@/config/firebase.config.js'
+import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
 import { FIREBASE_COLLECTION_ROUNDS } from '@/utils/variables/constants'
 
@@ -28,17 +36,34 @@ export function roundsApiFirebase() {
 
 	const getLastRound = async (): Promise<Round> => {
 		try {
-			const item = await getDocs(roundsCollectionRef)
-			return item.docs[item.docs.length - 1].data() as Round
+			const querySnapshot = await getDocs(
+				query(roundsCollectionRef, orderBy('id', 'desc'), limit(1))
+			)
+			if (!querySnapshot.empty) {
+				return querySnapshot.docs[0].data() as Round
+			} else {
+				console.log('No rounds found')
+				return {} as Round
+			}
 		} catch (error) {
 			console.error('Error getting last round: ', error)
 			return {} as Round
 		}
 	}
 
+	const updateRound = async (round: Round) => {
+		try {
+			const docRef = await addDoc(roundsCollectionRef, round)
+			console.log('Round updated with ID: ', docRef.id)
+		} catch (error) {
+			console.error('Error updating round: ', error)
+		}
+	}
+
 	return {
 		addRound,
 		getLastRound,
-		getRoundsLength
+		getRoundsLength,
+		updateRound
 	}
 }

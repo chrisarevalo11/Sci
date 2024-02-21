@@ -4,6 +4,7 @@ export interface Project {
 	github: string
 	logo: string
 	name: string
+	recipientId: string
 	slogan: string
 	tags: string[]
 	twitter: string

@@ -1,3 +1,5 @@
+import { Project } from './project.model'
+
 export interface Round {
 	address: string
 	allocationEndTime: number
@@ -11,6 +13,7 @@ export interface Round {
 	name: string
 	poolId: number
 	profileId: string
+	projects?: Project[]
 	registrationEndTime: number
 	registrationStartTime: number
 	registryGating: boolean

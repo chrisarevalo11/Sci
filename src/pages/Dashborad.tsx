@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/getContracts'
-import { getRpcProvider } from '@/helpers/relay'
 import { profilesApiFirebase } from '@/middlewares/firebase/profile.firebase.middleware'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { InitializeData } from '@/models/initialize-data.mode'
@@ -50,20 +49,23 @@ export default function Dashboard(): JSX.Element {
 
 			const profileId: string = profile?.id
 
+			const nowTime: Date = new Date()
+
 			const reviewThresholdTimestamp: number = toTimestamp(
-				'2024-02-22T13:30:00Z'
+				addMinutesToDate(nowTime, 0).toISOString()
 			)
 			const registrationStartTimestamp: number = toTimestamp(
-				'2024-02-22T14:00:00Z'
+				addMinutesToDate(nowTime, 5).toISOString()
 			)
 			const registrationEndTimestamp: number = toTimestamp(
-				'2024-02-22T14:30:00Z'
+				addMinutesToDate(nowTime, 30).toISOString()
 			)
 			const allocationStartTimestamp: number = toTimestamp(
-				'2024-02-22T15:00:00Z'
+				addMinutesToDate(nowTime, 60).toISOString()
 			)
-
-			const allocationEndTimestamp: number = toTimestamp('2024-02-22T15:30:00Z')
+			const allocationEndTimestamp: number = toTimestamp(
+				addMinutesToDate(nowTime, 90).toISOString()
+			)
 
 			const roundInitStrategyDataObject: InitializeData = {
 				registryGating: false,
@@ -187,4 +189,8 @@ export default function Dashboard(): JSX.Element {
 			)}
 		</div>
 	)
+}
+
+function addMinutesToDate(date: Date, minutes: number): Date {
+	return new Date(date.getTime() + minutes * 60000)
 }
