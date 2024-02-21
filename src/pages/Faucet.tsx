@@ -1,10 +1,10 @@
-import Approve from '@/components/tokens/Approve'
-import Faucet from '@/components/tokens/Faucet'
+import Approve from '@/components/faucet/Approve'
+import FaucetCard from '@/components/faucet/FaucetCard'
 import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatAddress } from '@/utils'
 
-export default function Tokens(): JSX.Element {
+export default function Faucet(): JSX.Element {
 	return (
 		<section className='w-full h-full p-4 md:p-10 relative md:overflow-hidden'>
 			<header className='flex justify-end md:justify-between pb-3 border-b-4 items-center border-customBlack border-dashed'>
@@ -23,7 +23,7 @@ export default function Tokens(): JSX.Element {
 						<TabsTrigger value='approve'>Approve</TabsTrigger>
 					</TabsList>
 					<TabsContent value='faucet'>
-						<Faucet />{' '}
+						<FaucetCard />{' '}
 					</TabsContent>
 					<TabsContent value='approve'>
 						<Approve />

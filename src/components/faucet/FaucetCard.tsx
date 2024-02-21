@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
+import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import { getContracts } from '@/functions/helpers/getContracts'
+import { getContracts } from '@/helpers/getContracts'
 import { toDecimal, toNumber } from '@/utils'
-export default function Faucet(): JSX.Element {
+export default function FaucetCard(): JSX.Element {
 	const [amount, setAmount] = useState(0)
 	const { address } = useAccount()
 	const { daiMockContract, alloContract } = getContracts()
+
+	const navigate = useNavigate()
 
 	const [allowance, setAllowance] = useState<number>(0)
 	const [balance, setBalance] = useState<number>(0)
@@ -99,7 +102,7 @@ export default function Faucet(): JSX.Element {
 
 			const mintTx = await daiMockContract
 				.connect(web3Signer)
-				.mint(toDecimal(1000))
+				.mint(toDecimal(10000))
 			await mintTx.wait()
 
 			setSyncronized(false)
@@ -111,9 +114,13 @@ export default function Faucet(): JSX.Element {
 	}
 
 	useEffect(() => {
-		;(async () => {
-			// await getStates()
-		})()
+		if (address) {
+			;(async () => {
+				await getStates()
+			})()
+		} else {
+			navigate('/app/projects')
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, syncronized])
 

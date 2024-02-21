@@ -2,9 +2,9 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import Home from '@/components/home/Home'
 import Layout from '@/components/layout/Layout'
-import NewRound from '@/components/newRound/NewRound'
-import Projects from '@/components/projects/Projects'
-import Tokens from '@/components/tokens/Tokens'
+import Dashboard from '@/pages/Dashboard'
+import Faucet from '@/pages/Faucet'
+import Projects from '@/pages/Projects'
 
 function App() {
 	return (
@@ -13,8 +13,8 @@ function App() {
 				<Route path='/' element={<Home />} />
 				<Route path='/app' element={<Layout />}>
 					<Route path='projects' element={<Projects />} />
-					<Route path='tokens' element={<Tokens />} />
-					<Route path='new-round' element={<NewRound />} />
+					<Route path='faucet' element={<Faucet />} />
+					<Route path='dashboard' element={<Dashboard />} />
 				</Route>
 			</Routes>
 		</HashRouter>

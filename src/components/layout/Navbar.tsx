@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import Cross from '@/components/icons/Cross'
 import Menu from '@/components/icons/Menu'
 import Logo from '@/components/ui/Logo'
+import { SCI_ADMIN_ADDRESS } from '@/utils/variables/constants'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export default function Navbar(): JSX.Element {
+	const { address } = useAccount()
 	const [open, setOpen] = useState(false)
 	const { pathname } = useLocation()
 
@@ -22,18 +25,22 @@ export default function Navbar(): JSX.Element {
 				>
 					<h6>Projects</h6>
 				</Link>
-				<Link
-					to={'/app/tokens'}
-					className={`hover:opacity-90 ${pathname === '/app/tokens' && 'text-customGreen pointer-events-none'}`}
-				>
-					<h6>Tokens</h6>
-				</Link>
-				<Link
-					to={'/app/new-round'}
-					className={`hover:opacity-90 ${pathname === '/app/new-round' && 'text-customGreen pointer-events-none'}`}
-				>
-					<h6>New Round</h6>
-				</Link>
+				{address && (
+					<Link
+						to={'/app/faucet'}
+						className={`hover:opacity-90 ${pathname === '/app/faucet' && 'text-customGreen pointer-events-none'}`}
+					>
+						<h6>Faucet</h6>
+					</Link>
+				)}
+				{address === SCI_ADMIN_ADDRESS && (
+					<Link
+						to={'/app/dashboard'}
+						className={`hover:opacity-90 ${pathname === '/app/dashboard' && 'text-customGreen pointer-events-none'}`}
+					>
+						<h6>Dashboard</h6>
+					</Link>
+				)}
 			</div>
 
 			<div className='hidden md:flex'>
@@ -57,6 +64,7 @@ function ResponsiveMenu({
 	open: boolean
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }): JSX.Element {
+	const { address } = useAccount()
 	const { pathname } = useLocation()
 	return (
 		<div
@@ -76,24 +84,27 @@ function ResponsiveMenu({
 						<h6>Projects</h6>
 					</Link>
 				</li>
-				<li>
+				{address && (
+					<li>
+						<Link
+							to={'/app/faucet'}
+							className={`hover:opacity-90 ${pathname === '/app/faucet' && 'text-customBlack/70  pointer-events-none'}`}
+							onClick={() => setOpen(false)}
+						>
+							<h6>Faucet</h6>
+						</Link>
+					</li>
+				)}
+				{address === SCI_ADMIN_ADDRESS && (
 					<Link
-						to={'/app/tokens'}
+						to={'/app/dashboard'}
+						className={`hover:opacity-90 ${pathname === '/app/dashboard' && 'text-customBlack/70 pointer-events-none'}`}
 						onClick={() => setOpen(false)}
-						className={`hover:opacity-90 ${pathname === '/app/tokens' && 'text-customBlack/70 pointer-events-none'}`}
 					>
-						<h6>Tokens</h6>
+						<h6>Dashboard</h6>
 					</Link>
-				</li>
-				<li>
-					<Link
-						to={'/app/new-round'}
-						onClick={() => setOpen(false)}
-						className={`hover:opacity-90 ${pathname === '/app/new-round' && 'text-customBlack/70 pointer-events-none'}`}
-					>
-						<h6>New Round</h6>
-					</Link>
-				</li>
+				)}
+
 				<li>
 					<ConnectButton />
 				</li>
