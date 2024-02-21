@@ -2,10 +2,9 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import Home from '@/components/home/Home'
 import Layout from '@/components/layout/Layout'
-import Projects from '@/components/projects/Projects'
-
-import Dashboard from './pages/Dashborad'
-import Faucet from './pages/Faucet'
+import Dashboard from '@/pages/Dashboard'
+import Faucet from '@/pages/Faucet'
+import Projects from '@/pages/Projects'
 
 function App() {
 	return (

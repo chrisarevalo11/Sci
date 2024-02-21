@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
 
 import StatCard from '@/components/layout/StatCard'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Round } from '@/models/round.model'
 
 export default function Sidebar(): JSX.Element {
-	const { address } = useAccount()
 	const { getLastRound } = roundsApiFirebase()
 
 	const [loading, setLoading] = useState<boolean>(true)
@@ -31,6 +29,7 @@ export default function Sidebar(): JSX.Element {
 
 	useEffect(() => {
 		getStates()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return (
@@ -46,18 +45,20 @@ export default function Sidebar(): JSX.Element {
 					/>
 					<header>
 						<h4>{round?.name}</h4>
-						<p className='flex items-center gap-2'>
+						<div className='flex items-center gap-2'>
 							<div
 								className={`size-2 rounded-full ${
+									// @ts-ignore
 									new Date().getTime() < round?.registrationEndTime
 										? 'bg-green-700'
 										: 'bg-red-700'
 								}`}
 							></div>
+							{/* @ts-ignore */}
 							{new Date().getTime() < round?.registrationEndTime
 								? ' Opened'
 								: ' Closed'}
-						</p>
+						</div>
 					</header>
 					<section className='space-y-4'>
 						<StatCard title='Total in pool' stat={`${totalPool} DAI`} />

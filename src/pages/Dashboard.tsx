@@ -9,7 +9,7 @@ import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middlew
 import { InitializeData } from '@/models/initialize-data.mode'
 import { Profile } from '@/models/profile.model'
 import { Round } from '@/models/round.model'
-import { toAbiCoder, toDecimal, toTimestamp } from '@/utils/functions'
+import { toAbiCoder, toDecimal, toTimestamp } from '@/utils'
 import {
 	GAS_LIMIT,
 	INITIALIZE_DATA_STRUCT_TYPES,
