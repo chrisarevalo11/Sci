@@ -2,6 +2,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import Home from '@/components/home/Home'
 import Layout from '@/components/layout/Layout'
+import CreateProject from '@/pages/CreateProject'
 import Dashboard from '@/pages/Dashboard'
 import Faucet from '@/pages/Faucet'
 import Projects from '@/pages/Projects'
@@ -12,9 +13,10 @@ function App() {
 			<Routes>
 				<Route path='/' element={<Home />} />
 				<Route path='/app' element={<Layout />}>
-					<Route path='projects' element={<Projects />} />
-					<Route path='faucet' element={<Faucet />} />
+					<Route path='create-project' element={<CreateProject />} />
 					<Route path='dashboard' element={<Dashboard />} />
+					<Route path='faucet' element={<Faucet />} />
+					<Route path='projects' element={<Projects />} />
 				</Route>
 			</Routes>
 		</HashRouter>

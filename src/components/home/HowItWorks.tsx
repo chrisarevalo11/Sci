@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 import StepCard from '@/components/home/StepCard'
-import Container from '@/components/ui/Container'
+import Container from '@/components/projects/ui/Container'
 
 export default function HowItWorks(): JSX.Element {
 	return (
