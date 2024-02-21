@@ -93,9 +93,9 @@ export default function Layout() {
 		>
 			<Navbar />
 			<Sidebar />
-			<div className='md:overflow-y-scroll overflow-x-hidden'>
+			<main className='md:overflow-y-auto overflow-x-hidden grow'>
 				<Outlet />
-			</div>
+			</main>
 		</div>
 	)
 }

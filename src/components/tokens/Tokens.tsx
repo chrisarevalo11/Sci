@@ -1,16 +1,18 @@
+import Approve from '@/components/tokens/Approve'
+import Faucet from '@/components/tokens/Faucet'
+import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatAddress } from '@/utils'
 
-import Approve from './Approve'
-import Faucet from './Faucet'
-
 export default function Tokens(): JSX.Element {
 	return (
-		<section className='w-full p-2 md:p-10 relative'>
-			<header className='flex justify-between pb-3 border-b-4 items-center border-customBlack border-dashed'>
-				<p className='font-bold text-lg'>
+		<section className='w-full h-full p-4 md:p-10 relative md:overflow-hidden'>
+			<header className='flex justify-end md:justify-between pb-3 border-b-4 items-center border-customBlack border-dashed'>
+				<p className='hidden font-bold text-lg md:flex items-center'>
 					<span className='font-dela mr-2'>Allo address:</span>
-					{formatAddress('0x9d0757C6cF366De37aB87128DD82e865F64f766C')}
+					<Clipboard text={'0x9d0757C6cF366De37aB87128DD82e865F64f766C'}>
+						{formatAddress('0x9d0757C6cF366De37aB87128DD82e865F64f766C')}
+					</Clipboard>
 				</p>
 				<h2>Tokens</h2>
 			</header>
@@ -31,7 +33,7 @@ export default function Tokens(): JSX.Element {
 			<img
 				src='/images/slime-no-bg.webp'
 				alt='slime'
-				className='absolute rotate-45 -z-10 right-[-20px] bottom-[-200px]'
+				className='absolute rotate-45 -z-10 right-[-20px] top-[100px] '
 			/>
 		</section>
 	)

@@ -112,13 +112,13 @@ export default function Faucet(): JSX.Element {
 
 	useEffect(() => {
 		;(async () => {
-			await getStates()
+			// await getStates()
 		})()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, syncronized])
 
 	return (
-		<div className='rounded-3xl border-2 border-customBlack gap-5 items-center flex flex-col bg-customWhite max-w-[500px] p-3 text-center'>
+		<div className='rounded-3xl border-2 border-customBlack gap-5 items-center flex flex-col bg-customWhite md:min-w-[400px] max-w-[500px] p-3 text-center'>
 			<h4>Get tokens</h4>
 			<p>
 				{loading ? (

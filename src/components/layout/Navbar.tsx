@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
+import Cross from '@/components/icons/Cross'
+import Menu from '@/components/icons/Menu'
 import Logo from '@/components/ui/Logo'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-
-import Cross from '../icons/Cross'
-import Menu from '../icons/Menu'
 
 export default function Navbar(): JSX.Element {
 	const [open, setOpen] = useState(false)
@@ -61,7 +60,7 @@ function ResponsiveMenu({
 	const { pathname } = useLocation()
 	return (
 		<div
-			className={`md:hideen fixed top-0 bottom-0 bg-customGreen transition-all ${open ? 'right-0' : 'right-[-300vw]'}`}
+			className={`md:hideen fixed top-0 bottom-0 z-[100] bg-customGreen transition-all ${open ? 'right-0' : 'right-[-300vw]'}`}
 			style={{ width: 'min(90%, 320px)' }}
 		>
 			<button onClick={() => setOpen(false)}>
@@ -71,6 +70,7 @@ function ResponsiveMenu({
 				<li>
 					<Link
 						to={'/app/projects'}
+						onClick={() => setOpen(false)}
 						className={`hover:opacity-90 ${pathname === '/app/projects' && 'text-customBlack/70 pointer-events-none'}`}
 					>
 						<h6>Projects</h6>
@@ -79,6 +79,7 @@ function ResponsiveMenu({
 				<li>
 					<Link
 						to={'/app/tokens'}
+						onClick={() => setOpen(false)}
 						className={`hover:opacity-90 ${pathname === '/app/tokens' && 'text-customBlack/70 pointer-events-none'}`}
 					>
 						<h6>Tokens</h6>
@@ -87,6 +88,7 @@ function ResponsiveMenu({
 				<li>
 					<Link
 						to={'/app/new-round'}
+						onClick={() => setOpen(false)}
 						className={`hover:opacity-90 ${pathname === '/app/new-round' && 'text-customBlack/70 pointer-events-none'}`}
 					>
 						<h6>New Round</h6>
