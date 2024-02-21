@@ -1,7 +1,3 @@
-<<<<<<< HEAD:src/helpers/dtos/dtoToRound.ts
-=======
-import { convertTimestampToDate } from '@/utils'
->>>>>>> main:src/functions/helpers/dtos/dtoToRound.ts
 import { Round, RoundDto } from '@/models/round.model'
 import { convertTimestampToDate } from '@/utils/functions'
 
