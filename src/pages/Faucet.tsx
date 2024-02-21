@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
+import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/getContracts'
@@ -8,6 +9,8 @@ import { toDecimal, toNumber } from '@/utils/functions'
 export default function Faucet(): JSX.Element {
 	const { address } = useAccount()
 	const { daiMockContract, alloContract } = getContracts()
+
+	const navigate = useNavigate()
 
 	const [allowance, setAllowance] = useState<number>(0)
 	const [balance, setBalance] = useState<number>(0)
@@ -114,6 +117,8 @@ export default function Faucet(): JSX.Element {
 			;(async () => {
 				await getStates()
 			})()
+		} else {
+			navigate('/app/projects')
 		}
 	}, [address, syncronized])
 

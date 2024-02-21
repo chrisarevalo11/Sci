@@ -137,8 +137,6 @@ export default function Dashboard(): JSX.Element {
 				reviewThreshold: roundInitStrategyDataObject.reviewThreshold
 			}
 
-			console.table(round)
-
 			// await addRound(round)
 			setLoading(false)
 		} catch (error) {
@@ -155,7 +153,7 @@ export default function Dashboard(): JSX.Element {
 				setLoading(false)
 			})()
 		} else {
-			navigate('/')
+			navigate('/app/projects')
 		}
 	}, [address])
 
