@@ -9,8 +9,7 @@ import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { getContracts } from '@/helpers/getContracts'
 import { getRpcProvider } from '@/helpers/relay'
-import { formatAddress } from '@/utils'
-import { toDecimal, toNumber } from '@/utils/functions'
+import { formatAddress, toDecimal, toNumber } from '@/utils'
 
 export default function Faucet(): JSX.Element {
 	const { address } = useAccount()

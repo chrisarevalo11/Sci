@@ -9,7 +9,7 @@ import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middlew
 import { Project } from '@/models/project.model'
 import { RecipientData } from '@/models/recipient-data.model'
 import { Round } from '@/models/round.model'
-import { toAbiCoder } from '@/utils/functions'
+import { toAbiCoder } from '@/utils'
 import { RECIPIENT_DATA_STRUCT_TYPES } from '@/utils/variables/constants'
 import { Status } from '@/utils/variables/enums'
 
@@ -136,8 +136,6 @@ export default function CreateProject(): JSX.Element {
 				<h1>Loading...</h1>
 			) : (
 				<div>
-					<h4>Sci Address: {sciAddress}</h4>
-					<br />
 					<button onClick={onRegisterRecipient}>registerRecipient</button>
 				</div>
 			)}

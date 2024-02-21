@@ -20,6 +20,11 @@ export default function Sidebar(): JSX.Element {
 		new Date()
 	)
 
+	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
+
 	const getStates = async () => {
 		try {
 			const lastRound: Round = await getLastRound()
@@ -31,6 +36,12 @@ export default function Sidebar(): JSX.Element {
 			)
 			setRegistrationEndTime(
 				new Date(convertTimestampToDate(lastRound.registrationEndTime))
+			)
+			setAllocationStartTime(
+				new Date(convertTimestampToDate(lastRound.allocationStartTime))
+			)
+			setAllocationEndTime(
+				new Date(convertTimestampToDate(lastRound.allocationEndTime))
 			)
 
 			setSyncronized(true)
