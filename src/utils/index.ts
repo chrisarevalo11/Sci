@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import { type ClassValue, clsx } from 'clsx'
 import { BytesLike, ethers } from 'ethers'
 import { twMerge } from 'tailwind-merge'
@@ -6,12 +7,23 @@ export function cn(...inputs: ClassValue[]): string {
 	return twMerge(clsx(inputs))
 }
 
-export function convertTimestampToDate(time: number): string {
-	const date: Date = new Date(time * 1000)
-	const year: number = date.getFullYear()
-	const month: string = (date.getMonth() + 1).toString().padStart(2, '0')
-	const day: string = date.getDate().toString().padStart(2, '0')
-	return `${year}-${month}-${day}`
+export function convertFileToBase64(
+	event: ChangeEvent<HTMLInputElement>,
+	callback: (base64: string | ArrayBuffer | null) => void
+): void {
+	const file = event.target.files ? event.target.files[0] : null
+
+	if (file) {
+		const reader = new FileReader()
+		reader.onloadend = () => {
+			callback(reader.result)
+		}
+		reader.readAsDataURL(file)
+	}
+}
+
+export function convertTimestampToDate(time: number): Date {
+	return new Date(time * 1000)
 }
 
 export function formatAddress(address: string): string {

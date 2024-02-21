@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
-import Container from '@/components/ui/Container'
-import Logo from '@/components/ui/Logo'
+import Container from '@/components/projects/ui/Container'
+import Logo from '@/components/projects/ui/Logo'
 
 export default function LandingMenu(): JSX.Element {
 	return (
