@@ -4,7 +4,9 @@ import {
 	getDocs,
 	limit,
 	orderBy,
-	query
+	query,
+	updateDoc,
+	where
 } from 'firebase/firestore'
 
 import { database } from '@/config/firebase.config.js'
@@ -51,10 +53,18 @@ export function roundsApiFirebase() {
 		}
 	}
 
-	const updateRound = async (round: Round) => {
+	const updateRound = async (updatedRound: Partial<Round>) => {
 		try {
-			const docRef = await addDoc(roundsCollectionRef, round)
-			console.log('Round updated with ID: ', docRef.id)
+			const q = query(roundsCollectionRef, where('id', '==', updatedRound.id))
+			const querySnapshot = await getDocs(q)
+
+			if (!querySnapshot.empty) {
+				const docRef = querySnapshot.docs[0].ref
+				await updateDoc(docRef, updatedRound)
+				console.log(`Round with ID: ${updatedRound.id} updated successfully`)
+			} else {
+				console.log('No round found with the given ID')
+			}
 		} catch (error) {
 			console.error('Error updating round: ', error)
 		}

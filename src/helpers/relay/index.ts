@@ -95,18 +95,19 @@ export async function registerRecipient(
 }
 
 export async function reviewRecipients(
+	address: string,
 	recipientIds: string[],
 	recipientStatuses: number[]
 ): Promise<string> {
 	try {
-		const { alloContract } = getContracts()
+		const { qVSimpleStrategyContract } = getContracts()
 		const privateKey: string = getPrivateKey()
 		const rpcUrl: string = getRpcUrl()
 
 		const provider: ethers.JsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl)
 		const signer: ethers.Wallet = new ethers.Wallet(privateKey, provider)
 
-		const reviewRecipientsTx = await alloContract
+		const reviewRecipientsTx = await qVSimpleStrategyContract(address)
 			.connect(signer)
 			.reviewRecipients(recipientIds, recipientStatuses, {
 				gasLimit: GAS_LIMIT
@@ -115,6 +116,7 @@ export async function reviewRecipients(
 		await reviewRecipientsTx.wait()
 		return 'SUCCESSFUL_REVIEW_MESSAGE'
 	} catch (error) {
+		console.error('Error reviewing recipients: ', error)
 		return 'FAILED_REVIEW_MESSAGE'
 	}
 }

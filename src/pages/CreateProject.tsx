@@ -17,7 +17,7 @@ export default function CreateProject(): JSX.Element {
 	const { address } = useAccount()
 	const { getLastRound, updateRound } = roundsApiFirebase()
 
-	const { daiMockContract, alloContract } = getContracts()
+	const { qVSimpleStrategyContract } = getContracts()
 
 	const navigate = useNavigate()
 
@@ -42,12 +42,25 @@ export default function CreateProject(): JSX.Element {
 	const onRegisterRecipient = async () => {
 		try {
 			setLoading(true)
+			const ethereum = (window as any).ethereum
 
-			const banner: string = ''
+			if (!ethereum) {
+				alert('Ethereum object not found')
+				return
+			}
+
+			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
+				ethereum
+			)
+			await web3Provider.send('eth_requestAccounts', [])
+
+			const banner: string =
+				'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.vox-cdn.com%2Fthumbor%2Fk6HOlMRHUM3ru78xLEFnmUyIwr4%3D%2F0x0%3A800x533%2F1200x800%2Ffilters%3Afocal(0x0%3A800x533)%2Fcdn.vox-cdn.com%2Fuploads%2Fchorus_image%2Fimage%2F30291399%2F800px-thoreaus_quote_near_his_cabin_site__walden_pond.0.jpg&f=1&nofb=1&ipt=8409d0f745c896681625cd32b0f36396463f6cc2b81643dbae6e639ba24b1b2f&ipo=images'
 			const description: string =
 				'Interpolation of field information with satellite information'
 			const github: string = 'www.github.com/recipients'
-			const logo: string = ''
+			const logo: string =
+				'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fep01.epimg.net%2Fcultura%2Fimagenes%2F2016%2F09%2F09%2Fbabelia%2F1473420066_993651_1473430939_noticia_normal.jpg&f=1&nofb=1&ipt=65fb6ff7f54bb2df9ed64412dac43ca6f3c9a1921e591cc4eb66e84165793eac&ipo=images'
 			const name: string = 'Recipients'
 			const slogan: string = 'Gaia is our home'
 			const tags: string[] = ['satellite', 'field']
@@ -88,6 +101,7 @@ export default function CreateProject(): JSX.Element {
 			)
 
 			const reviewRecipientsResponse: string = await reviewRecipients(
+				round.address,
 				[address],
 				[Status.InReview]
 			)
@@ -108,7 +122,12 @@ export default function CreateProject(): JSX.Element {
 				website
 			}
 
-			round.projects?.push(project)
+			if (!round.projects) {
+				round.projects = []
+			}
+
+			round.projects.push(project)
+			console.log('round', round)
 			await updateRound(round)
 
 			setLoading(false)

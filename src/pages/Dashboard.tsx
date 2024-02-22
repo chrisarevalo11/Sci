@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi'
 import { getContracts } from '@/helpers/getContracts'
 import { profilesApiFirebase } from '@/middlewares/firebase/profile.firebase.middleware'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
-import { InitializeData } from '@/models/initialize-data.mode'
+import { InitializeData } from '@/models/initialize-data.model'
 import { Profile } from '@/models/profile.model'
 import { Round } from '@/models/round.model'
 import { toAbiCoder, toDecimal, toTimestamp } from '@/utils'
@@ -55,7 +55,7 @@ export default function Dashboard(): JSX.Element {
 				addMinutesToDate(nowTime, 0).toISOString()
 			)
 			const registrationStartTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 5).toISOString()
+				addMinutesToDate(nowTime, 2).toISOString()
 			)
 			const registrationEndTimestamp: number = toTimestamp(
 				addMinutesToDate(nowTime, 30).toISOString()
@@ -135,7 +135,8 @@ export default function Dashboard(): JSX.Element {
 				donations: 0,
 				donators: 0,
 				id,
-				image: '',
+				image:
+					'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fep01.epimg.net%2Fcultura%2Fimagenes%2F2016%2F09%2F09%2Fbabelia%2F1473420066_993651_1473430939_noticia_normal.jpg&f=1&nofb=1&ipt=65fb6ff7f54bb2df9ed64412dac43ca6f3c9a1921e591cc4eb66e84165793eac&ipo=images',
 				machingPool: 1000,
 				metadataRequired: roundInitStrategyDataObject.metadataRequired,
 				name: 'round: Ecology for Everyone',
