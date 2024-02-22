@@ -1,5 +1,5 @@
 import { Round, RoundDto } from '@/models/round.model'
-import { convertTimestampToDate } from '@/utils/functions'
+import { convertTimestampToDate } from '@/utils'
 
 export function dtoToRound(dto: RoundDto): Round {
 	const startDate: string = convertTimestampToDate(dto.startTime)

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import Countdown from '@/components/layout/Countdown'
 import StatCard from '@/components/layout/StatCard'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Round } from '@/models/round.model'
@@ -63,15 +64,15 @@ export default function Sidebar(): JSX.Element {
 			{loading ? (
 				<p>Loading...</p>
 			) : (
-				<div className='h-full bg-black flex flex-col justify-between py-4 px-4 text-customWhite text-left'>
+				<div className='h-full bg-black md:flex hidden flex-col justify-around xl:justify-start pb-1 2xl:pb-3 xl:gap-6 px-4 text-customWhite text-left'>
 					<img
 						src={round?.image}
 						alt='Round Thumbnail'
 						className='h-[150px] w-full rounded-xl'
 					/>
 					<header>
-						<h4>{round?.name}</h4>
-						<div className='flex items-center gap-2'>
+						<h5>{round?.name}</h5>
+						<div className='flex items-center gap-2 mt-2'>
 							<div
 								className={`size-2 rounded-full ${
 									new Date() > registraionStartTime &&
@@ -86,7 +87,22 @@ export default function Sidebar(): JSX.Element {
 								: ' Closed'}
 						</div>
 					</header>
-					<section className='space-y-4'>
+					{Date.now() < registraionEndTime.getTime() ? (
+						<div className='flex items-center justify-between px-2 gap-4'>
+							<h5 className='flex flex-col text-left'>
+								<span>time</span> <span>left</span>
+							</h5>
+							<Countdown targetDate={registraionEndTime} />
+						</div>
+					) : Date.now() < allocationEndTime.getTime() ? (
+						<div className='flex items-center justify-between px-2 gap-4'>
+							<h5 className='flex flex-col text-left'>
+								<span>time</span> <span>left</span>
+							</h5>
+							<Countdown targetDate={allocationEndTime} />
+						</div>
+					) : null}
+					<section className='space-y-2 2xl:space-y-4'>
 						<StatCard title='Total in pool' stat={`${totalPool} DAI`} />
 						<StatCard
 							title='Matching pool'
