@@ -14,7 +14,7 @@ export default function Navbar(): JSX.Element {
 	const { pathname } = useLocation()
 
 	return (
-		<nav className='w-full bg-black py-3 flex justify-between items-center text-white px-5 md:col-span-2'>
+		<nav className='w-full bg-black py-2 flex justify-between items-center text-white px-5 md:col-span-2'>
 			<Link to={'/'} className='flex justify-center items-center'>
 				<Logo />
 			</Link>
