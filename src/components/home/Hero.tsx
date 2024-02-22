@@ -1,4 +1,4 @@
-import Container from '@/components/projects/ui/Container'
+import Container from '@/components/ui/Container'
 
 export default function Hero(): JSX.Element {
 	return (
