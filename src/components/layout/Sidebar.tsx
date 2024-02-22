@@ -11,7 +11,6 @@ export default function Sidebar(): JSX.Element {
 
 	const [loading, setLoading] = useState<boolean>(true)
 	const [round, setRound] = useState<Round | null>(null)
-	const [syncronized, setSyncronized] = useState<boolean>(false)
 	const [totalPool, setTotalPool] = useState<number>(0)
 
 	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
@@ -45,7 +44,6 @@ export default function Sidebar(): JSX.Element {
 				new Date(convertTimestampToDate(lastRound.allocationEndTime))
 			)
 
-			setSyncronized(true)
 			setLoading(false)
 		} catch (error) {
 			alert('Error: Look at console')
