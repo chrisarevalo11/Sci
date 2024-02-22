@@ -58,13 +58,13 @@ export default function Dashboard(): JSX.Element {
 				addMinutesToDate(nowTime, 2).toISOString()
 			)
 			const registrationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 30).toISOString()
+				addMinutesToDate(nowTime, 4).toISOString()
 			)
 			const allocationStartTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 60).toISOString()
+				addMinutesToDate(nowTime, 5).toISOString()
 			)
 			const allocationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 90).toISOString()
+				addMinutesToDate(nowTime, 30).toISOString()
 			)
 
 			const roundInitStrategyDataObject: InitializeData = {

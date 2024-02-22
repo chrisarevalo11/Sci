@@ -50,7 +50,7 @@ export default function Projects(): JSX.Element {
 							<p>{project.description}</p>
 							<Link
 								to={`/app/projects/${project.recipientId}`}
-								state={{ project }}
+								state={{ round, project }}
 							>
 								Details
 							</Link>
