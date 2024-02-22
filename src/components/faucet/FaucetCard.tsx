@@ -6,7 +6,6 @@ import { useAccount } from 'wagmi'
 import { getContracts } from '@/helpers/getContracts'
 import { toDecimal, toNumber } from '@/utils'
 export default function FaucetCard(): JSX.Element {
-	const [amount, setAmount] = useState(0)
 	const { address } = useAccount()
 	const { daiMockContract, alloContract } = getContracts()
 
@@ -15,7 +14,6 @@ export default function FaucetCard(): JSX.Element {
 	const [allowance, setAllowance] = useState<number>(0)
 	const [balance, setBalance] = useState<number>(0)
 	const [loading, setLoading] = useState<boolean>(true)
-	const [sciAddress, setSciAddress] = useState<string>('')
 	const [syncronized, setSyncronized] = useState<boolean>(false)
 
 	const getStates = async () => {
@@ -43,7 +41,6 @@ export default function FaucetCard(): JSX.Element {
 				await daiMockContract.connect(web3Provider).balanceOf(address)
 			)
 			setBalance(balanceOf)
-			setSciAddress(alloContract.target)
 
 			setSyncronized(true)
 			setLoading(false)
@@ -54,39 +51,11 @@ export default function FaucetCard(): JSX.Element {
 		}
 	}
 
-	const onApprove = async () => {
-		try {
-			setLoading(true)
-			const ethereum = (window as any).ethereum
-
-			if (!ethereum) {
-				alert('Ethereum object not found')
-				return
-			}
-
-			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
-				ethereum
-			)
-			await web3Provider.send('eth_requestAccounts', [])
-			const web3Signer: ethers.JsonRpcSigner = await web3Provider.getSigner()
-
-			const approveTx = await daiMockContract
-				.connect(web3Signer)
-				.approve(alloContract.target, toDecimal(1000))
-			await approveTx.wait()
-
-			setSyncronized(false)
-		} catch (error) {
-			console.error(error)
-			alert('Error: Look at console')
-			setLoading(false)
-		}
-	}
-
 	const onMint = async () => {
 		try {
 			setLoading(true)
 
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const ethereum = (window as any).ethereum
 
 			if (!ethereum) {
@@ -128,25 +97,27 @@ export default function FaucetCard(): JSX.Element {
 		<div className='rounded-3xl border-2 border-customBlack gap-5 items-center flex flex-col bg-customWhite md:min-w-[400px] max-w-[500px] p-3 text-center'>
 			<h4>Get tokens</h4>
 			<p>
-				{loading ? (
-					'Loading...'
-				) : (
-					<>
-						<span>Balance: {balance}</span>
-						<span>Allowance: {allowance}</span>
-						<span>Sci Address: {sciAddress}</span>
-					</>
-				)}
+				This is a test DAI faucet that will allow you to interact with Sci. By
+				clicking the &quot;GET&quot; button below you will receive 10,000 DAI.
 			</p>
-			<input
-				type='number'
-				placeholder='Enter the amount'
-				onChange={e => setAmount(parseFloat(e.target.value))}
-			/>
+			{loading ? (
+				'Loading...'
+			) : (
+				<div className='flex gap-4 items-center'>
+					<p>
+						<span className='font-dela mr-2'>Balance:</span>
+						{balance}
+					</p>
+					<p>
+						<span className='font-dela mr-2'>Allowance: </span>
+						{allowance}
+					</p>
+				</div>
+			)}
 			<button
-				disabled={amount <= 0 || isNaN(amount)}
 				className='btn btn-green mt-3'
-				onClick={() => console.log(amount)}
+				onClick={onMint}
+				disabled={loading}
 			>
 				Get
 			</button>
