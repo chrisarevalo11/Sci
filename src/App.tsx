@@ -7,6 +7,8 @@ import Dashboard from '@/pages/Dashboard'
 import Faucet from '@/pages/Faucet'
 import Projects from '@/pages/Projects'
 
+import Project from './pages/Project'
+
 function App() {
 	return (
 		<HashRouter>
@@ -17,6 +19,7 @@ function App() {
 					<Route path='dashboard' element={<Dashboard />} />
 					<Route path='faucet' element={<Faucet />} />
 					<Route path='projects' element={<Projects />} />
+					<Route path='projects/:recipientId' element={<Project />} />
 				</Route>
 			</Routes>
 		</HashRouter>
