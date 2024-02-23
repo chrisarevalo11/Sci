@@ -6,12 +6,11 @@ import Approve from '@/components/faucet/Approve'
 import FaucetCard from '@/components/faucet/FaucetCard'
 import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { getContracts } from '@/helpers/contracts'
 import { formatAddress } from '@/utils'
+import { ALLO_CONTRACT_ADDRESS } from '@/utils/variables/constants'
 
 export default function Faucet(): JSX.Element {
 	const { address } = useAccount()
-	const { alloContract } = getContracts()
 
 	const navigate = useNavigate()
 
@@ -27,8 +26,8 @@ export default function Faucet(): JSX.Element {
 			<header className='flex flex-col-reverse md:flex-row justify-end md:justify-between items-end pb-3 border-b-4 md:items-center border-customBlack border-dashed'>
 				<div className='font-bold text-lg flex items-center'>
 					<span className='font-dela mr-2'>Allo address:</span>
-					<Clipboard text={alloContract.target}>
-						{formatAddress(alloContract.target)}
+					<Clipboard text={ALLO_CONTRACT_ADDRESS}>
+						{formatAddress(ALLO_CONTRACT_ADDRESS)}
 					</Clipboard>
 				</div>
 				<h2>Tokens</h2>
