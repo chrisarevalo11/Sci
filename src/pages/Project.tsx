@@ -17,7 +17,7 @@ export default function ProjectComponent(): JSX.Element {
 	const { round, project }: { round: Round; project: Project } = location.state
 
 	const { address } = useAccount()
-	const { alloInstance } = getContracts()
+	const { alloContract, qVSimpleStrategyContract } = getContracts()
 	const { getLastRound, updateRound } = roundsApiFirebase()
 
 	const [loading, setLoading] = useState<boolean>(true)
@@ -43,28 +43,22 @@ export default function ProjectComponent(): JSX.Element {
 
 			const amount: bigint = toDecimal(100)
 
-			const fundPoolTx = await alloInstance
+			console.log('Este es el monto que se va a enviar: ', amount)
+
+			const fundPoolTx = await alloContract
 				.connect(web3Signer)
 				.fundPool(round.poolId, amount, { gasLimit: GAS_LIMIT })
 			await fundPoolTx.wait()
 
 			// TODO: Stepeer
 
-			const votes: bigint =
-				await alloInstance.calculateAdditionalEffectiveVotes(
-					address,
-					project.recipientId,
-					amount
-				)
+			const votes: bigint = await qVSimpleStrategyContract(round.address)
+				.connect(web3Provider)
+				.calculateAdditionalEffectiveVotes(address, project.recipientId, 100)
 
-			const votesNumber: number = Number(votes.toString())
+			console.log('Votes: ', votes)
 
-			console.log(
-				'Este es el número de votos que irán a este proyecto: ',
-				votesNumber
-			)
-
-			const voiceCredits: number = toNumber(amount)
+			const voiceCredits: number = 100
 
 			const allocateDataArray: any[] = [project.recipientId, voiceCredits]
 
@@ -73,13 +67,20 @@ export default function ProjectComponent(): JSX.Element {
 				allocateDataArray
 			)
 
-			const allocateFundsTx = await alloInstance
+			const allocateFundsTx = await alloContract
 				.connect(web3Signer)
-				.allocate(round.poolId, allocateDataBytes)
+				.allocate(round.poolId, allocateDataBytes, { gasLimit: GAS_LIMIT })
 
 			await allocateFundsTx.wait()
 
-			round.donators = round.donators++
+			console.log(
+				await qVSimpleStrategyContract(round.address)
+					.connect(web3Provider)
+					.getRecipient(project.recipientId)
+			)
+
+			round.donations = round.donations + 100
+			round.donators = round.donators + 1
 			await updateRound(round)
 
 			setLoading(false)

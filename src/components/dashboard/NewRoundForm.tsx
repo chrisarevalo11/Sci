@@ -29,15 +29,15 @@ type Props = {
 }
 
 const formSchema = z.object({
-	name: z.string().min(1, { message: 'Name is required' }),
-	banner: z.string().min(1, { message: 'Banner is required' }),
-	amount: z.string().min(1, { message: 'Amount is required' }),
-	registrationDeadline: z
-		.string()
-		.min(1, { message: 'Registration deadline is required' }),
-	allocationDeadline: z
-		.string()
-		.min(1, { message: 'Allocation deadline is required' })
+	// name: z.string().min(1, { message: 'Name is required' }),
+	// banner: z.string().min(1, { message: 'Banner is required' }),
+	// amount: z.string().min(1, { message: 'Amount is required' }),
+	// registrationDeadline: z
+	// 	.string()
+	// 	.min(1, { message: 'Registration deadline is required' }),
+	// allocationDeadline: z
+	// 	.string()
+	// 	.min(1, { message: 'Allocation deadline is required' })
 })
 
 export default function NewRoundForm(props: Props): JSX.Element {
@@ -89,16 +89,16 @@ export default function NewRoundForm(props: Props): JSX.Element {
 				addMinutesToDate(nowTime, 0).toISOString()
 			)
 			const registrationStartTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 2).toISOString()
+				addMinutesToDate(nowTime, 1.5).toISOString()
 			)
 			const registrationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 30).toISOString()
+				addMinutesToDate(nowTime, 2).toISOString()
 			)
 			const allocationStartTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 60).toISOString()
+				addMinutesToDate(nowTime, 3).toISOString()
 			)
 			const allocationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 90).toISOString()
+				addMinutesToDate(nowTime, 4).toISOString()
 			)
 
 			const roundInitStrategyDataObject: InitializeData = {

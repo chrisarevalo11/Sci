@@ -5,19 +5,24 @@ import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/getContracts'
 import { registerRecipient, reviewRecipients } from '@/helpers/relay'
+import { profilesApiFirebase } from '@/middlewares/firebase/profile.firebase.middleware'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Project } from '@/models/project.model'
 import { RecipientData } from '@/models/recipient-data.model'
 import { Round } from '@/models/round.model'
 import { toAbiCoder } from '@/utils'
-import { RECIPIENT_DATA_STRUCT_TYPES } from '@/utils/variables/constants'
+import {
+	GAS_LIMIT,
+	RECIPIENT_DATA_STRUCT_TYPES
+} from '@/utils/variables/constants'
 import { Status } from '@/utils/variables/enums'
 
 export default function CreateProject(): JSX.Element {
 	const { address } = useAccount()
 	const { getLastRound, updateRound } = roundsApiFirebase()
+	const { getProfileByAddress } = profilesApiFirebase()
 
-	const { qVSimpleStrategyContract } = getContracts()
+	const { alloContract } = getContracts()
 
 	const navigate = useNavigate()
 
@@ -53,6 +58,7 @@ export default function CreateProject(): JSX.Element {
 				ethereum
 			)
 			await web3Provider.send('eth_requestAccounts', [])
+			const web3Signer: ethers.JsonRpcSigner = await web3Provider.getSigner()
 
 			const banner: string =
 				'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.vox-cdn.com%2Fthumbor%2Fk6HOlMRHUM3ru78xLEFnmUyIwr4%3D%2F0x0%3A800x533%2F1200x800%2Ffilters%3Afocal(0x0%3A800x533)%2Fcdn.vox-cdn.com%2Fuploads%2Fchorus_image%2Fimage%2F30291399%2F800px-thoreaus_quote_near_his_cabin_site__walden_pond.0.jpg&f=1&nofb=1&ipt=8409d0f745c896681625cd32b0f36396463f6cc2b81643dbae6e639ba24b1b2f&ipo=images'
@@ -95,10 +101,11 @@ export default function CreateProject(): JSX.Element {
 			if (!round) return
 			if (!address) return
 
-			const registerRecipientResponse: string = await registerRecipient(
-				round?.poolId,
-				recipientData
-			)
+			const registerRecipientTx = await alloContract
+				.connect(web3Signer)
+				.registerRecipient(round.poolId, recipientData, { gasLimit: GAS_LIMIT })
+
+			await registerRecipientTx.wait()
 
 			const reviewRecipientsResponse: string = await reviewRecipients(
 				round.address,
@@ -106,8 +113,7 @@ export default function CreateProject(): JSX.Element {
 				[Status.InReview]
 			)
 
-			console.log('responseTransaction', registerRecipientResponse)
-			console.log('responseReview', reviewRecipientsResponse)
+			console.log('reviewRecipientsResponse: ', reviewRecipientsResponse)
 
 			const project: Project = {
 				banner,
