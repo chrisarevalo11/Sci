@@ -7,7 +7,10 @@ import FaucetCard from '@/components/faucet/FaucetCard'
 import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatAddress } from '@/utils'
-import { ALLO_CONTRACT_ADDRESS } from '@/utils/variables/constants'
+import {
+	ALLO_CONTRACT_ADDRESS,
+	BSC_SCAN_URL
+} from '@/utils/variables/constants'
 
 export default function Faucet(): JSX.Element {
 	const { address } = useAccount()
@@ -27,10 +30,15 @@ export default function Faucet(): JSX.Element {
 				<div className='font-bold text-lg flex items-center'>
 					<span className='font-dela mr-2'>Allo address:</span>
 					<Clipboard text={ALLO_CONTRACT_ADDRESS}>
-						{formatAddress(ALLO_CONTRACT_ADDRESS)}
+						<a
+							className='hover:border-b-2'
+							href={`${BSC_SCAN_URL}/address/${ALLO_CONTRACT_ADDRESS}`}
+						>
+							{formatAddress(ALLO_CONTRACT_ADDRESS)}
+						</a>
 					</Clipboard>
 				</div>
-				<h2>Tokens</h2>
+				<h2>Faucet</h2>
 			</header>
 			<div className='mt-10 flex flex-col justify-center items-center'>
 				<Tabs defaultValue='faucet' className='min-w-[300px]'>

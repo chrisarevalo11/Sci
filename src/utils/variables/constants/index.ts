@@ -16,6 +16,9 @@ export const RECIPIENT_DATA_STRUCT_TYPES: string[] = [
 	'tuple(uint256, string)'
 ]
 
+// URLs
+export const BSC_SCAN_URL = 'https://testnet.bscscan.com'
+
 // Others
 export const FIREBASE_COLLECTION_PROFILES = 'profiles'
 export const FIREBASE_COLLECTION_ROUNDS = 'rounds'

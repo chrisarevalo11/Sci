@@ -18,7 +18,7 @@ export function useClipboard(): [copyFn, copied] {
 			setCopied(true)
 			setTimeout(() => {
 				setCopied(false)
-			}, 3000)
+			}, 250)
 			return true
 		} catch (error) {
 			console.warn('Copy failed', error)
