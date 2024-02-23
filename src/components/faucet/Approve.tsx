@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
 
-import { getContracts } from '@/helpers/getContracts'
+import { getContracts } from '@/helpers/contracts'
 import { formatAddress, toDecimal } from '@/utils'
 
 export default function Approve(): JSX.Element {

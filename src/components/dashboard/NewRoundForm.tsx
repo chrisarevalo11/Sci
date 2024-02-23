@@ -11,7 +11,7 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form'
-import { getContracts } from '@/helpers/getContracts'
+import { getContracts } from '@/helpers/contracts'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { InitializeData } from '@/models/initialize-data.model'
 import { Profile } from '@/models/profile.model'

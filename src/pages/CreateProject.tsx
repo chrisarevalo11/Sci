@@ -3,7 +3,7 @@ import { BytesLike, ethers, ZeroAddress } from 'ethers'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import { getContracts } from '@/helpers/getContracts'
+import { getContracts } from '@/helpers/contracts'
 import { registerRecipient, reviewRecipients } from '@/helpers/relay'
 import { profilesApiFirebase } from '@/middlewares/firebase/profile.firebase.middleware'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'

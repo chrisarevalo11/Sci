@@ -3,7 +3,7 @@ import { BytesLike, ethers, toBigInt, toNumber } from 'ethers'
 import { useLocation, useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import { getContracts } from '@/helpers/getContracts'
+import { getContracts } from '@/helpers/contracts'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'

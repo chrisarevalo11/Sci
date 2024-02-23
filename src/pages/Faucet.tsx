@@ -6,7 +6,7 @@ import Approve from '@/components/faucet/Approve'
 import FaucetCard from '@/components/faucet/FaucetCard'
 import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { getContracts } from '@/helpers/getContracts'
+import { getContracts } from '@/helpers/contracts'
 import { formatAddress } from '@/utils'
 
 export default function Faucet(): JSX.Element {

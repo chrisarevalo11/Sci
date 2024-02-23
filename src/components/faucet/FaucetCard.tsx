@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import { getContracts } from '@/helpers/getContracts'
+import { getContracts } from '@/helpers/contracts'
 import { toDecimal, toNumber } from '@/utils'
 export default function FaucetCard(): JSX.Element {
 	const { address } = useAccount()
