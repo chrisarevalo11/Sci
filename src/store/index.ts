@@ -2,7 +2,11 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux'
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-const rootReducer = combineReducers({})
+import { erc20DetailsSlice } from './slides/erc20Details.slice'
+
+const rootReducer = combineReducers({
+	erc20Details: erc20DetailsSlice.reducer
+})
 
 export const store = configureStore({
 	reducer: rootReducer

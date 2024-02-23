@@ -4,6 +4,9 @@ export const ALLO_CONTRACT_ADDRESS =
 export const ROUND_ADDRESS = '0x9e4c57a662aD052E6F19b8361754f99E50902D22'
 export const SCI_ADMIN_ADDRESS = '0x7753E5f36f20B14fFb6b6a61319Eb66f63abdb0b'
 
+// Messages
+export const ERROR_MESSAGE = 'Error: Look at console'
+
 // Struct Types
 export const ALLOCATE_STRUCT_TYPES: string[] = ['address', 'uint256']
 export const INITIALIZE_DATA_STRUCT_TYPES: string[] = [

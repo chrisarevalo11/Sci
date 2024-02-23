@@ -1,11 +1,15 @@
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import Approve from '@/components/faucet/Approve'
-import FaucetCard from '@/components/faucet/FaucetCard'
+import MintCard from '@/components/faucet/MintCard'
 import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ERC20Details } from '@/models/ERC20Details.model'
+import { AppDispatch, useAppSelector } from '@/store'
+import { getERC20Details } from '@/store/thunks/erc20details.thunk'
 import { formatAddress } from '@/utils'
 import {
 	ALLO_CONTRACT_ADDRESS,
@@ -15,14 +19,26 @@ import {
 export default function Faucet(): JSX.Element {
 	const { address } = useAccount()
 
+	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
+
+	const erc20Details: ERC20Details = useAppSelector(
+		state => state.erc20Details.erc20Details
+	)
+
+	const erc20DetailsFetched: boolean = useAppSelector(
+		state => state.erc20Details.erc20DetailsFetched
+	)
 
 	useEffect(() => {
 		if (!address) {
 			navigate('/app/projects')
 		}
-		// eslint-disable-next-line
-	}, [address])
+
+		if (!erc20DetailsFetched) {
+			dispatch(getERC20Details(address as string))
+		}
+	}, [address, navigate])
 
 	return (
 		<section className='w-full h-full p-4 md:p-10 relative md:overflow-hidden'>
@@ -41,13 +57,16 @@ export default function Faucet(): JSX.Element {
 				<h2>Faucet</h2>
 			</header>
 			<div className='mt-10 flex flex-col justify-center items-center'>
-				<Tabs defaultValue='faucet' className='min-w-[300px]'>
+				<Tabs defaultValue='mint' className='min-w-[300px]'>
 					<TabsList className='flex justify-center w-fit mx-auto mb-5'>
-						<TabsTrigger value='faucet'>Faucet</TabsTrigger>
+						<TabsTrigger value='mint'>Mint</TabsTrigger>
 						<TabsTrigger value='approve'>Approve</TabsTrigger>
 					</TabsList>
-					<TabsContent value='faucet'>
-						<FaucetCard />{' '}
+					<TabsContent value='mint'>
+						<MintCard
+							erc20Details={erc20Details}
+							erc20DetailsFetched={erc20DetailsFetched}
+						/>
 					</TabsContent>
 					<TabsContent value='approve'>
 						<Approve />
