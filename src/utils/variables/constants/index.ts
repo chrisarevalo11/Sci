@@ -1,19 +1,29 @@
-export const FIREBASE_COLLECTION_PROFILES = 'profiles'
-export const FIREBASE_COLLECTION_ROUNDS = 'rounds'
+// Addresses
+export const ALLO_CONTRACT_ADDRESS =
+	'0x9d0757C6cF366De37aB87128DD82e865F64f766C'
+export const ROUND_ADDRESS = '0x9e4c57a662aD052E6F19b8361754f99E50902D22'
+export const SCI_ADMIN_ADDRESS = '0x7753E5f36f20B14fFb6b6a61319Eb66f63abdb0b'
 
-export const GAS_LIMIT = 30000000
+// Messages
+export const ERROR_MESSAGE = 'Error: Look at console'
+export const ETHEREUM_OBJECT_NOT_FOUND = 'Ethereum object not found'
 
+// Struct Types
+export const ALLOCATE_STRUCT_TYPES: string[] = ['address', 'uint256']
 export const INITIALIZE_DATA_STRUCT_TYPES: string[] = [
 	'uint256',
 	'tuple(bool, bool, uint256, uint64, uint64, uint64, uint64)'
 ]
-
 export const RECIPIENT_DATA_STRUCT_TYPES: string[] = [
 	'address',
 	'address',
 	'tuple(uint256, string)'
 ]
 
-export const ROUND_ADDRESS = '0x721eBbaFA68401B03441975BDB1790b4Ff66d527'
+// URLs
+export const BSC_SCAN_URL = 'https://testnet.bscscan.com'
 
-export const SCI_ADMIN_ADDRESS = '0x7753E5f36f20B14fFb6b6a61319Eb66f63abdb0b'
+// Others
+export const FIREBASE_COLLECTION_PROFILES = 'profiles'
+export const FIREBASE_COLLECTION_ROUNDS = 'rounds'
+export const GAS_LIMIT = 30000000

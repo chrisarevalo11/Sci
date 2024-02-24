@@ -5,7 +5,7 @@ import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middlew
 import { Round } from '@/models/round.model'
 import { GAS_LIMIT } from '@/utils/variables/constants'
 
-import { getContracts } from '../getContracts'
+import { getContracts } from '../contracts'
 
 function getPrivateKey(): string {
 	if (!import.meta.env.VITE_WALLET1_PRIVATE_KEY) {

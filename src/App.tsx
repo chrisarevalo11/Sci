@@ -1,4 +1,7 @@
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { HashRouter, Route, Routes } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import Home from '@/components/home/Home'
 import Layout from '@/components/layout/Layout'
@@ -7,9 +10,20 @@ import Dashboard from '@/pages/Dashboard'
 import Faucet from '@/pages/Faucet'
 import Projects from '@/pages/Projects'
 
-import Project from './pages/Project'
+import ProjectComponent from './pages/Project'
+import { destroyERC20Details } from './store/slides/erc20Details.slice'
+import { AppDispatch } from './store'
 
 function App() {
+	const { isDisconnected } = useAccount()
+	const dispatch = useDispatch<AppDispatch>()
+
+	useEffect(() => {
+		if (isDisconnected) {
+			dispatch(destroyERC20Details(''))
+		}
+	}, [isDisconnected])
+
 	return (
 		<HashRouter>
 			<Routes>
@@ -19,7 +33,7 @@ function App() {
 					<Route path='dashboard' element={<Dashboard />} />
 					<Route path='faucet' element={<Faucet />} />
 					<Route path='projects' element={<Projects />} />
-					<Route path='projects/:recipientId' element={<Project />} />
+					<Route path='projects/:recipientId' element={<ProjectComponent />} />
 				</Route>
 			</Routes>
 		</HashRouter>

@@ -4,6 +4,7 @@ export interface Round {
 	address: string
 	allocationEndTime: number
 	allocationStartTime: number
+	distributed?: boolean
 	donations: number
 	donators: number
 	id: number
