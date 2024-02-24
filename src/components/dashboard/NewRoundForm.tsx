@@ -209,7 +209,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 							<input
 								disabled
 								type='text'
-								className='w-full'
+								className='w-full opacity-70'
 								placeholder='Test'
 								value={formatAddress(profile?.id)}
 							/>
