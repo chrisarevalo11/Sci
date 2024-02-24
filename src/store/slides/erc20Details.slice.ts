@@ -1,5 +1,4 @@
 import { ERC20Details } from '@/models/ERC20Details.model'
-import { Round } from '@/models/round.model'
 import { createSlice, PayloadAction, Slice } from '@reduxjs/toolkit'
 
 interface InitialState {

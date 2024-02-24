@@ -33,12 +33,12 @@ export default function Faucet(): JSX.Element {
 	useEffect(() => {
 		if (!address) {
 			navigate('/app/projects')
+			return
 		}
 
-		if (!erc20DetailsFetched) {
-			dispatch(getERC20Details(address as string))
-		}
-	}, [address, navigate])
+		dispatch(getERC20Details(address as string))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [address])
 
 	return (
 		<section className='w-full h-full p-4 md:p-10 relative md:overflow-hidden'>
