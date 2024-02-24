@@ -1,7 +1,8 @@
-import { ethers } from 'ethers'
+import { useDispatch } from 'react-redux'
 
 import { ERC20Details } from '@/models/ERC20Details.model'
-import { toDecimal } from '@/utils'
+import { AppDispatch } from '@/store'
+import { mintERC20 } from '@/store/thunks/erc20details.thunk'
 
 type Props = {
 	erc20Details: ERC20Details
@@ -10,36 +11,11 @@ type Props = {
 
 export default function MintCard(props: Props): JSX.Element {
 	const { erc20Details, erc20DetailsFetched } = props
+	const dispatch = useDispatch<AppDispatch>()
 
 	const onMint = async () => {
-		try {
-			setLoading(true)
-
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const ethereum = (window as any).ethereum
-
-			if (!ethereum) {
-				alert('Ethereum object not found')
-				return
-			}
-
-			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
-				ethereum
-			)
-			await web3Provider.send('eth_requestAccounts', [])
-			const web3Signer: ethers.JsonRpcSigner = await web3Provider.getSigner()
-
-			const mintTx = await daiMockContract
-				.connect(web3Signer)
-				.mint(toDecimal(10000))
-			await mintTx.wait()
-
-			setSyncronized(false)
-		} catch (error) {
-			console.error(error)
-			alert('Error: Look at console')
-			setLoading(false)
-		}
+		const amount: number = 10000
+		dispatch(mintERC20(amount))
 	}
 
 	return (
@@ -68,7 +44,7 @@ export default function MintCard(props: Props): JSX.Element {
 				onClick={onMint}
 				disabled={!erc20DetailsFetched}
 			>
-				Get
+				1,000 DAI
 			</button>
 		</div>
 	)
