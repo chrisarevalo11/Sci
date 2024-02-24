@@ -14,7 +14,7 @@ export default function MintCard(props: Props): JSX.Element {
 	const dispatch = useDispatch<AppDispatch>()
 
 	const onMint = async () => {
-		const amount: number = 10000
+		const amount: number = 1000
 		dispatch(mintERC20(amount))
 	}
 

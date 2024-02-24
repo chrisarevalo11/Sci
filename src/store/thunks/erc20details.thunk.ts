@@ -16,6 +16,31 @@ import {
 } from '../slides/erc20Details.slice'
 import { RootState, useAppSelector } from '..'
 
+export const approveERC20 = createAsyncThunk(
+	'erc20Details/approveERC20',
+	async (amount: number, { dispatch, getState }) => {
+		try {
+			dispatch(setERC20DetailsFetched(false))
+			const web3Signer: ethers.JsonRpcSigner = await getFrontendSigner()
+			const address: string = await web3Signer.getAddress()
+			const { daiMock } = getContracts()
+
+			const amountBigint: bigint = toDecimal(amount)
+
+			const approveTx = await daiMock
+				.connect(web3Signer)
+				.approve(ALLO_CONTRACT_ADDRESS, amountBigint)
+			await approveTx.wait()
+
+			dispatch(getERC20Details(address))
+		} catch (error) {
+			console.error('❌ ', error)
+			alert(ERROR_MESSAGE)
+			dispatch(setERC20DetailsFetched(true))
+		}
+	}
+)
+
 export const getERC20Details = createAsyncThunk(
 	'erc20Details/getERC20Details',
 	async (address: string, { dispatch }) => {

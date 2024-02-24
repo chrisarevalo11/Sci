@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import Approve from '@/components/faucet/Approve'
+import ApproveCard from '@/components/faucet/ApproveCard'
 import MintCard from '@/components/faucet/MintCard'
 import Clipboard from '@/components/ui/Clipboard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -59,8 +59,12 @@ export default function Faucet(): JSX.Element {
 			<div className='mt-10 flex flex-col justify-center items-center'>
 				<Tabs defaultValue='mint' className='min-w-[300px]'>
 					<TabsList className='flex justify-center w-fit mx-auto mb-5'>
-						<TabsTrigger value='mint'>Mint</TabsTrigger>
-						<TabsTrigger value='approve'>Approve</TabsTrigger>
+						<TabsTrigger value='mint' disabled={!erc20DetailsFetched}>
+							Mint
+						</TabsTrigger>
+						<TabsTrigger value='approve' disabled={!erc20DetailsFetched}>
+							Approve
+						</TabsTrigger>
 					</TabsList>
 					<TabsContent value='mint'>
 						<MintCard
@@ -69,7 +73,7 @@ export default function Faucet(): JSX.Element {
 						/>
 					</TabsContent>
 					<TabsContent value='approve'>
-						<Approve />
+						<ApproveCard erc20DetailsFetched={erc20DetailsFetched} />
 					</TabsContent>
 				</Tabs>
 			</div>
