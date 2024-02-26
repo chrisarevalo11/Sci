@@ -1,36 +1,58 @@
+import { ZeroAddress } from 'ethers'
+
 import { Round } from '@/models/round.model'
 import { createSlice, PayloadAction, Slice } from '@reduxjs/toolkit'
 
 interface InitialState {
-	rounds: Round[]
-	roundsFetched: boolean
+	lastRound: Round
+	lastRoundFetched: boolean
 }
 
 const initialState: InitialState = {
-	rounds: [],
-	roundsFetched: false
+	lastRound: {
+		address: ZeroAddress,
+		allocationEndTime: 0,
+		allocationStartTimeDate: new Date(),
+		allocationStartTime: 0,
+		allocationEndTimeDate: new Date(),
+		distributed: false,
+		donations: 0,
+		donators: [],
+		id: 0,
+		image: '',
+		machingPool: 0,
+		metadataRequired: false,
+		name: '',
+		poolId: 0,
+		profileId: '',
+		registrationEndTime: 0,
+		registraionEndTimeDate: new Date(),
+		registrationStartTime: 0,
+		registraionStartTimeDate: new Date(),
+		registryGating: false,
+		reviewThreshold: 0,
+		totalPool: 0
+	},
+	lastRoundFetched: false
 }
 
-export const roundslice: Slice<InitialState> = createSlice({
-	name: 'rounds',
+export const roundSlice: Slice<InitialState> = createSlice({
+	name: 'round',
 	initialState,
 	reducers: {
-		destroyRounds: state => {
-			state.rounds = initialState.rounds
-			state.roundsFetched = initialState.roundsFetched
+		destroyRound: state => {
+			state.lastRound = initialState.lastRound
+			state.lastRoundFetched = initialState.lastRoundFetched
 		},
-		setRoundsId: (state, action: PayloadAction<Round[]>) => {
-			state.rounds = action.payload.map(round => {
-				return { ...round, id: round.id }
-			})
+		setRound: (state, action: PayloadAction<Round>) => {
+			state.lastRound = action.payload
 		},
-		setRoundsFetched: (state, action: PayloadAction<boolean>) => {
-			state.roundsFetched = action.payload
+		setRoundFetched: (state, action: PayloadAction<boolean>) => {
+			state.lastRoundFetched = action.payload
 		}
 	}
 })
 
-export const { destroyRound, setRoundsId, setRoundsFetched } =
-	roundslice.actions
+export const { destroyRound, setRound, setRoundFetched } = roundSlice.actions
 
-export default roundslice.reducer
+export default roundSlice.reducer

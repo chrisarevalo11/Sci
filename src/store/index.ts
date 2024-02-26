@@ -3,9 +3,11 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import { erc20DetailsSlice } from './slides/erc20Details.slice'
+import { roundSlice } from './slides/roundslice'
 
 const rootReducer = combineReducers({
-	erc20Details: erc20DetailsSlice.reducer
+	erc20Details: erc20DetailsSlice.reducer,
+	round: roundSlice.reducer
 })
 
 export const store = configureStore({
