@@ -167,25 +167,10 @@ export default function NewRoundForm(): JSX.Element {
 			const roundsLegth: number = await getRoundsLength()
 			const id: number = roundsLegth + 1
 
-			const allocationEndTimeDate: Date = convertTimestampToDate(
-				allocationEndTimestamp
-			)
-			const allocationStartTimeDate: Date = convertTimestampToDate(
-				allocationStartTimestamp
-			)
-			const registrationEndTimeDate: Date = convertTimestampToDate(
-				registrationEndTimestamp
-			)
-			const registrationStartTimeDate: Date = convertTimestampToDate(
-				registrationStartTimestamp
-			)
-
 			const round: Round = {
 				address: ROUND_ADDRESS,
 				allocationEndTime: roundInitStrategyDataObject.allocationEndTime,
-				allocationEndTimeDate,
 				allocationStartTime: roundInitStrategyDataObject.allocationStartTime,
-				allocationStartTimeDate,
 				distributed: false,
 				donations: 0,
 				donators: [],
@@ -199,17 +184,15 @@ export default function NewRoundForm(): JSX.Element {
 				profileId,
 				projects: [],
 				registrationEndTime: roundInitStrategyDataObject.registrationEndTime,
-				registrationEndTimeDate,
 				registrationStartTime:
 					roundInitStrategyDataObject.registrationStartTime,
-				registrationStartTimeDate,
 				registryGating: roundInitStrategyDataObject.registryGating,
 				reviewThreshold: roundInitStrategyDataObject.reviewThreshold,
 				totalPool: 1000
 			}
 
 			await addRound(round)
-			dispatch(setRound(round))
+			dispatch(setRoundFetched(false))
 			setLoading(false)
 		} catch (error) {
 			console.error(error)

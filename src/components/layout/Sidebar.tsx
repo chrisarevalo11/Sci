@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import Countdown from '@/components/layout/Countdown'
@@ -6,6 +6,7 @@ import StatCard from '@/components/layout/StatCard'
 import { Round } from '@/models/round.model'
 import { AppDispatch, useAppSelector } from '@/store'
 import { getRound } from '@/store/thunks/round.thunk'
+import { convertTimestampToDate } from '@/utils'
 
 export default function Sidebar(): JSX.Element {
 	const dispatch = useDispatch<AppDispatch>()
@@ -16,7 +17,36 @@ export default function Sidebar(): JSX.Element {
 		state => state.round.lastRoundFetched
 	)
 
+	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registraionEndTime, setRegistrationEndTime] = useState<Date>(
+		new Date()
+	)
+
+	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
+
+	const getStates = async () => {
+		setRegistrationStartTime(
+			new Date(convertTimestampToDate(lastRound.registrationStartTime))
+		)
+		setRegistrationEndTime(
+			new Date(convertTimestampToDate(lastRound.registrationEndTime))
+		)
+		setAllocationStartTime(
+			new Date(convertTimestampToDate(lastRound.allocationStartTime))
+		)
+		setAllocationEndTime(
+			new Date(convertTimestampToDate(lastRound.allocationEndTime))
+		)
+	}
+
 	useEffect(() => {
+		getStates()
+
 		dispatch(getRound())
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [lastRoundFetched])
@@ -44,37 +74,43 @@ export default function Sidebar(): JSX.Element {
 							<div className='flex items-center gap-2 mt-2'>
 								<div
 									className={`size-2 rounded-full ${
-										new Date() > lastRound?.registrationStartTimeDate &&
-										new Date() < lastRound?.registrationEndTimeDate
+										new Date() > registraionStartTime &&
+										new Date() < registraionEndTime
 											? 'bg-green-700'
 											: 'bg-red-700'
 									}`}
 								></div>
-								{new Date() > lastRound?.registrationStartTimeDate &&
-								new Date() < lastRound?.registrationEndTimeDate
+								{new Date() > registraionStartTime &&
+								new Date() < registraionEndTime
 									? ' Opened'
 									: ' Closed'}
 							</div>
 						</header>
-						{new Date() < lastRound?.registrationEndTimeDate ? (
-							<div className='flex items-center justify-between px-2 gap-4'>
-								<h5 className='flex flex-col text-left'>
-									<span>time</span> <span>left</span>
-								</h5>
-								<Countdown targetDate={lastRound?.registrationEndTimeDate} />
-							</div>
-						) : new Date() < lastRound?.allocationEndTimeDate ? (
-							<div className='flex items-center justify-between px-2 gap-4'>
-								<h5 className='flex flex-col text-left'>
-									<span>time</span> <span>left</span>
-								</h5>
-								<Countdown targetDate={lastRound?.allocationEndTimeDate} />
-							</div>
-						) : null}
+						{lastRound.distributed ? (
+							'Distributed  🎉'
+						) : (
+							<>
+								{Date.now() < registraionEndTime.getTime() ? (
+									<div className='flex items-center justify-between px-2 gap-4'>
+										<h5 className='flex flex-col text-left'>
+											<span>Regi...</span> <span>Time</span>
+										</h5>
+										<Countdown targetDate={registraionEndTime} />
+									</div>
+								) : Date.now() < allocationEndTime.getTime() ? (
+									<div className='flex items-center justify-between px-2 gap-4'>
+										<h5 className='flex flex-col text-left'>
+											<span>Vota...</span> <span>time</span>
+										</h5>
+										<Countdown targetDate={allocationEndTime} />
+									</div>
+								) : null}
+							</>
+						)}
 						<section className='space-y-2 2xl:space-y-4'>
 							<StatCard
 								title='Total in pool'
-								stat={`${lastRound?.totalPool || 0} DAI`}
+								stat={`${lastRound.totalPool || 0} DAI`}
 							/>
 							<StatCard
 								title='Matching pool'

@@ -12,9 +12,7 @@ const initialState: InitialState = {
 	lastRound: {
 		address: ZeroAddress,
 		allocationEndTime: 0,
-		allocationStartTimeDate: new Date(),
 		allocationStartTime: 0,
-		allocationEndTimeDate: new Date(),
 		distributed: false,
 		donations: 0,
 		donators: [],
@@ -26,9 +24,7 @@ const initialState: InitialState = {
 		poolId: 0,
 		profileId: '',
 		registrationEndTime: 0,
-		registraionEndTimeDate: new Date(),
 		registrationStartTime: 0,
-		registraionStartTimeDate: new Date(),
 		registryGating: false,
 		reviewThreshold: 0,
 		totalPool: 0
