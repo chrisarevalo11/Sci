@@ -23,7 +23,7 @@ export default function MintCard(props: Props): JSX.Element {
 			<h4>Get tokens</h4>
 			<p>
 				This is a test DAI faucet that will allow you to interact with Sci. By
-				clicking the GET button below you will receive 10,000 DAI.
+				clicking the GET button below you will receive 1,000 DAI.
 			</p>
 			{!erc20DetailsFetched ? (
 				'Loading...'

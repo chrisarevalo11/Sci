@@ -37,15 +37,15 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const formSchema = z.object({
-	// name: z.string().min(1, { message: 'Name is required' }),
-	// banner: z.string().min(1, { message: 'Banner is required' }),
-	// amount: z.string().min(1, { message: 'Amount is required' }),
-	// registrationDeadline: z
-	// 	.string()
-	// 	.min(1, { message: 'Registration deadline is required' }),
-	// allocationDeadline: z
-	// 	.string()
-	// 	.min(1, { message: 'Allocation deadline is required' })
+	name: z.string().min(1, { message: 'Name is required' }),
+	banner: z.string().min(1, { message: 'Banner is required' }),
+	amount: z.string().min(1, { message: 'Amount is required' }),
+	registrationDeadline: z
+		.string()
+		.min(1, { message: 'Registration deadline is required' }),
+	allocationDeadline: z
+		.string()
+		.min(1, { message: 'Allocation deadline is required' })
 })
 
 export default function NewRoundForm(): JSX.Element {
@@ -216,7 +216,7 @@ export default function NewRoundForm(): JSX.Element {
 							<input
 								disabled
 								type='text'
-								className='w-full'
+								className='w-full opacity-70'
 								placeholder='Test'
 								value={`${ALLO_PROFILE_ID.slice(0, 33)}...`}
 							/>
