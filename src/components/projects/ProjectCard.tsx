@@ -25,8 +25,8 @@ export default function ProjectCard(props: Props): JSX.Element {
 				/>
 			</div>
 			<div className='flex flex-col gap-4 p-4 bg-customBlack text-customWhite'>
-				<h4 className='text-right'>{project.name}</h4>
-				<p>{project.description}</p>
+				<h4 className='text-right line-clamp-1'>{project.name}</h4>
+				<p className='line-clamp-3'>{project.description}</p>
 				<Link
 					className='btn mx-auto btn-green'
 					to={`/app/projects/${project.recipientId}`}

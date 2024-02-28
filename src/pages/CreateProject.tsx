@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/contracts'
-import { registerRecipient, reviewRecipients } from '@/helpers/relay'
-import { profilesApiFirebase } from '@/middlewares/firebase/profile.firebase.middleware'
+import { reviewRecipients } from '@/helpers/relay'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Project } from '@/models/project.model'
 import { RecipientData } from '@/models/recipient-data.model'
@@ -20,9 +19,8 @@ import { Status } from '@/utils/variables/enums'
 export default function CreateProject(): JSX.Element {
 	const { address } = useAccount()
 	const { getLastRound, updateRound } = roundsApiFirebase()
-	const { getProfileByAddress } = profilesApiFirebase()
 
-	const { alloContract } = getContracts()
+	const { allo: alloContract } = getContracts()
 
 	const navigate = useNavigate()
 
@@ -47,6 +45,7 @@ export default function CreateProject(): JSX.Element {
 	const onRegisterRecipient = async () => {
 		try {
 			setLoading(true)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const ethereum = (window as any).ethereum
 
 			if (!ethereum) {
@@ -84,6 +83,7 @@ export default function CreateProject(): JSX.Element {
 				}
 			}
 
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const recipientDataArray: any[] = [
 				recipientDataObject.recipientId,
 				recipientDataObject.recipientAddress,
@@ -152,18 +152,29 @@ export default function CreateProject(): JSX.Element {
 		} else {
 			navigate('/app/projects')
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address, syncronized])
 
 	return (
-		<div>
-			<h1>Create Project</h1>
+		<section className='w-full h-[max(100%, fit-content)] p-4 md:p-10 relative'>
 			{loading ? (
 				<h1>Loading...</h1>
 			) : (
-				<div>
-					<button onClick={onRegisterRecipient}>registerRecipient</button>
-				</div>
+				<>
+					<header className='flex justify-end pb-3 border-b-4 items-center border-customBlack border-dashed'>
+						<h2>Create Project</h2>
+					</header>
+
+					<img
+						src='/images/slime-no-bg.webp'
+						alt='slime'
+						className='absolute rotate-180 -z-10 right-[-20px] top-[180px] '
+					/>
+					<div>
+						<button onClick={onRegisterRecipient}>registerRecipient</button>
+					</div>
+				</>
 			)}
-		</div>
+		</section>
 	)
 }

@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import { Link } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
+import CreateCard from '@/components/projects/CreateCard'
 import ProjectCard from '@/components/projects/ProjectCard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getContracts } from '@/helpers/contracts'
@@ -106,6 +107,7 @@ export default function Projects(): JSX.Element {
 				<h2>Projects</h2>
 			</header>
 			<div className='grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 mt-10 justify-items-center'>
+				<CreateCard />
 				{loading ? (
 					Array.from({ length: 12 }).map((_, index) => (
 						<Skeleton
