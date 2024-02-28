@@ -122,7 +122,10 @@ export default function Sidebar(): JSX.Element {
 								title='Total donations'
 								stat={`${lastRound.donations} DAI`}
 							/>
-							<StatCard title='Total donators' stat={`${lastRound.donators}`} />
+							<StatCard
+								title='Total donators'
+								stat={`${lastRound.donators ? lastRound.donators : 0}`}
+							/>
 						</section>
 					</>
 				)}
