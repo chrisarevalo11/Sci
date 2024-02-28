@@ -126,7 +126,7 @@ body {
 	}
 
 	.btn-green {
-		@apply bg-customGreen text-customWhite;
+		@apply bg-customGreen text-customWhite font-dela uppercase text-sm font-light;
 	}
 
 	.bordered {
