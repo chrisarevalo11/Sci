@@ -4,9 +4,9 @@ export interface Round {
 	address: string
 	allocationEndTime: number
 	allocationStartTime: number
-	distributed?: boolean
+	distributed: boolean
 	donations: number
-	donators: number
+	donators: string[]
 	id: number
 	image: string
 	machingPool: number
@@ -14,9 +14,10 @@ export interface Round {
 	name: string
 	poolId: number
 	profileId: string
-	projects?: Project[]
+	projects: Project[]
 	registrationEndTime: number
 	registrationStartTime: number
 	registryGating: boolean
 	reviewThreshold: number
+	totalPool: number
 }

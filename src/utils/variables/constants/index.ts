@@ -1,8 +1,12 @@
 // Addresses
 export const ALLO_CONTRACT_ADDRESS =
 	'0x9d0757C6cF366De37aB87128DD82e865F64f766C'
-export const ROUND_ADDRESS = '0x9e4c57a662aD052E6F19b8361754f99E50902D22'
+export const ROUND_ADDRESS = '0x8a55F440E98b7BA94B1899f36fF8955699b114B0'
 export const SCI_ADMIN_ADDRESS = '0x7753E5f36f20B14fFb6b6a61319Eb66f63abdb0b'
+
+// Allo
+export const ALLO_PROFILE_ID: string =
+	'0xbd71c97162a5a1b0c45de7e244d7aa9b028ac578b6a136f356edd0df7a84bb59'
 
 // Messages
 export const ERROR_MESSAGE = 'Error: Look at console'

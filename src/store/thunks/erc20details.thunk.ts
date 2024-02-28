@@ -14,11 +14,11 @@ import {
 	setERC20Details,
 	setERC20DetailsFetched
 } from '../slides/erc20Details.slice'
-import { RootState, useAppSelector } from '..'
+import { RootState } from '..'
 
 export const approveERC20 = createAsyncThunk(
 	'erc20Details/approveERC20',
-	async (amount: number, { dispatch, getState }) => {
+	async (amount: number, { dispatch }) => {
 		try {
 			dispatch(setERC20DetailsFetched(false))
 			const web3Signer: ethers.JsonRpcSigner = await getFrontendSigner()
@@ -66,6 +66,7 @@ export const getERC20Details = createAsyncThunk(
 		} catch (error) {
 			console.error('❌ ', error)
 			alert(ERROR_MESSAGE)
+			dispatch(setERC20DetailsFetched(true))
 		}
 	}
 )

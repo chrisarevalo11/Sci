@@ -32,12 +32,10 @@ export function getContracts(): Contracts {
 		provider
 	)
 
-	const qVSimpleStrategy: QVSimpleStrategy =
+	const qVSimpleStrategy: QVSimpleStrategy = (address: string) => {
 		// eslint-disable-next-line camelcase
-		QVSimpleStrategy__factory.connect(
-			contractsJson.qVSimpleStrategyContract.address,
-			provider
-		)
+		return QVSimpleStrategy__factory.connect(address, provider)
+	}
 
 	return { allo, daiMock, qVSimpleStrategy }
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { BytesLike, ethers, MaxUint256 } from 'ethers'
+import { AddressLike, BytesLike, ethers, MaxUint256 } from 'ethers'
 import { useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 import { z } from 'zod'
 
 import {
@@ -11,22 +12,29 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form'
+import { getFrontendSigner } from '@/helpers'
 import { getContracts } from '@/helpers/contracts'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { InitializeData } from '@/models/initialize-data.model'
-import { Profile } from '@/models/profile.model'
+import { Metadata } from '@/models/metadata.model'
 import { Round } from '@/models/round.model'
-import { formatAddress, toAbiCoder, toDecimal, toTimestamp } from '@/utils'
+import { AppDispatch } from '@/store'
+import { setRound, setRoundFetched } from '@/store/slides/roundslice'
 import {
+	convertFileToBase64,
+	convertTimestampToDate,
+	formatAddress,
+	toAbiCoder,
+	toDecimal,
+	toTimestamp
+} from '@/utils'
+import {
+	ALLO_PROFILE_ID,
 	GAS_LIMIT,
 	INITIALIZE_DATA_STRUCT_TYPES,
 	ROUND_ADDRESS
 } from '@/utils/variables/constants'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-type Props = {
-	profile: Profile
-}
 
 const formSchema = z.object({
 	name: z.string().min(1, { message: 'Name is required' }),
@@ -40,12 +48,12 @@ const formSchema = z.object({
 		.min(1, { message: 'Allocation deadline is required' })
 })
 
-export default function NewRoundForm(props: Props): JSX.Element {
-	const { profile } = props
+export default function NewRoundForm(): JSX.Element {
 	const [loading, setLoading] = useState<boolean>(false)
+	const [banner, setBanner] = useState<string | ArrayBuffer | null>('')
 	const { addRound, getRoundsLength } = roundsApiFirebase()
-	const { daiMockContract, alloContract, qVSimpleStrategyContract } =
-		getContracts()
+	const { allo, daiMock, qVSimpleStrategy } = getContracts()
+	const dispatch = useDispatch<AppDispatch>()
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: {
@@ -61,27 +69,19 @@ export default function NewRoundForm(props: Props): JSX.Element {
 	const onCreatePoolWithCustomStrategy = async (
 		values: z.infer<typeof formSchema>
 	) => {
-		console.log(values)
-
 		try {
-			setLoading(true)
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const ethereum = (window as any).ethereum
+			const web3Signer: ethers.JsonRpcSigner = await getFrontendSigner()
 
-			if (!ethereum) {
-				alert('Ethereum object not found')
-				return
-			}
+			// const name: string = values.name
+			// const bannerBase64: string = banner as string
+			// const fundingAmount: number = Number(values.amount)
+			// const registrationDeadline: number = toTimestamp(
+			// 	values.registrationDeadline
+			// )
+			// const allocationDeadline: number = toTimestamp(values.allocationDeadline)
 
-			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
-				ethereum
-			)
-			await web3Provider.send('eth_requestAccounts', [])
-			const web3Signer: ethers.JsonRpcSigner = await web3Provider.getSigner()
-
-			if (!profile) return
-
-			const profileId: string = profile?.id
+			const profileId: BytesLike = ALLO_PROFILE_ID
+			const roundAddress: AddressLike = ROUND_ADDRESS
 
 			const nowTime: Date = new Date()
 
@@ -92,13 +92,13 @@ export default function NewRoundForm(props: Props): JSX.Element {
 				addMinutesToDate(nowTime, 2).toISOString()
 			)
 			const registrationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 30).toISOString()
+				addMinutesToDate(nowTime, 3).toISOString()
 			)
 			const allocationStartTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 60).toISOString()
+				addMinutesToDate(nowTime, 6).toISOString()
 			)
 			const allocationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 90).toISOString()
+				addMinutesToDate(nowTime, 9).toISOString()
 			)
 
 			const roundInitStrategyDataObject: InitializeData = {
@@ -130,20 +130,23 @@ export default function NewRoundForm(props: Props): JSX.Element {
 				roundInitStrategyDataArray
 			)
 
-			const daiMockContractAddress: string = daiMockContract.target
+			const daiMockContractAddress: AddressLike = await daiMock.getAddress()
 
 			const poolFundingAmount: bigint = toDecimal(1000)
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const metadata: any[] = [BigInt(1), 'https://ipfs.io/ipfs/QmX3J']
+			const metadata: Metadata = {
+				protocol: BigInt(1),
+				pointer: 'https://ipfs.io/ipfs/QmX8z3Z'
+			}
 
-			const poolManagersAddresses: string[] = []
+			const poolManagersAddresses: AddressLike[] = []
 
-			const createPoolWithCustomStrategyTx = await alloContract
+			const createPoolWithCustomStrategyTx = await allo
 				.connect(web3Signer)
 				.createPoolWithCustomStrategy(
 					profileId,
-					ROUND_ADDRESS,
+					roundAddress,
 					initRoundData,
 					daiMockContractAddress,
 					poolFundingAmount,
@@ -156,7 +159,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 			await createPoolWithCustomStrategyTx.wait()
 
 			const currentQvSimpleStrategyContract =
-				qVSimpleStrategyContract(ROUND_ADDRESS).connect(web3Signer)
+				qVSimpleStrategy(ROUND_ADDRESS).connect(web3Signer)
 
 			const poolId: bigint = await currentQvSimpleStrategyContract.getPoolId()
 			const poolIdNumber: number = Number(poolId)
@@ -168,8 +171,9 @@ export default function NewRoundForm(props: Props): JSX.Element {
 				address: ROUND_ADDRESS,
 				allocationEndTime: roundInitStrategyDataObject.allocationEndTime,
 				allocationStartTime: roundInitStrategyDataObject.allocationStartTime,
+				distributed: false,
 				donations: 0,
-				donators: 0,
+				donators: [],
 				id,
 				image:
 					'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fep01.epimg.net%2Fcultura%2Fimagenes%2F2016%2F09%2F09%2Fbabelia%2F1473420066_993651_1473430939_noticia_normal.jpg&f=1&nofb=1&ipt=65fb6ff7f54bb2df9ed64412dac43ca6f3c9a1921e591cc4eb66e84165793eac&ipo=images',
@@ -178,14 +182,17 @@ export default function NewRoundForm(props: Props): JSX.Element {
 				name: 'round: Ecology for Everyone',
 				poolId: poolIdNumber,
 				profileId,
+				projects: [],
 				registrationEndTime: roundInitStrategyDataObject.registrationEndTime,
 				registrationStartTime:
 					roundInitStrategyDataObject.registrationStartTime,
 				registryGating: roundInitStrategyDataObject.registryGating,
-				reviewThreshold: roundInitStrategyDataObject.reviewThreshold
+				reviewThreshold: roundInitStrategyDataObject.reviewThreshold,
+				totalPool: 1000
 			}
 
 			await addRound(round)
+			dispatch(setRoundFetched(false))
 			setLoading(false)
 		} catch (error) {
 			console.error(error)
@@ -204,14 +211,14 @@ export default function NewRoundForm(props: Props): JSX.Element {
 					className='space-y-4 flex flex-col items-center'
 				>
 					<div className='flex flex-col items-start w-full'>
-						<FormLabel className='mr-2 font-bold mb-2'>Profile Id</FormLabel>
+						<FormLabel className='mr-2 font-bold mb-2'>Profile ID</FormLabel>
 						<FormControl>
 							<input
 								disabled
 								type='text'
 								className='w-full opacity-70'
 								placeholder='Test'
-								value={formatAddress(profile?.id)}
+								value={`${ALLO_PROFILE_ID.slice(0, 33)}...`}
 							/>
 						</FormControl>
 					</div>
@@ -220,12 +227,12 @@ export default function NewRoundForm(props: Props): JSX.Element {
 						name='name'
 						render={({ field }) => (
 							<FormItem className='flex flex-col items-start w-full'>
-								<FormLabel className='mr-2 font-bold'>Round Name</FormLabel>
+								<FormLabel className='mr-2 font-bold'>Round name</FormLabel>
 								<FormControl>
 									<input
 										type='text'
 										className='w-full'
-										placeholder='My round'
+										placeholder='Grants Citizens Round: Archimedes’ Lever'
 										{...field}
 									/>
 								</FormControl>
@@ -240,7 +247,15 @@ export default function NewRoundForm(props: Props): JSX.Element {
 							<FormItem className='flex flex-col items-start w-full'>
 								<FormLabel className='mr-2 font-bold'>Banner</FormLabel>
 								<FormControl>
-									<input type='file' className='w-full' {...field} />
+									<input
+										{...field}
+										type='file'
+										className='w-full'
+										onChange={event => {
+											field.onChange(event)
+											convertFileToBase64(event, setBanner)
+										}}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -251,14 +266,12 @@ export default function NewRoundForm(props: Props): JSX.Element {
 						name='amount'
 						render={({ field }) => (
 							<FormItem className='flex flex-col items-start w-full'>
-								<FormLabel className='mr-2 font-bold'>
-									Initial amount (DAI)
-								</FormLabel>
+								<FormLabel className='mr-2 font-bold'>Funding amount</FormLabel>
 								<FormControl>
 									<input
 										type='number'
 										className='w-full'
-										placeholder='1880'
+										placeholder='10,000 DAI'
 										{...field}
 									/>
 								</FormControl>
@@ -271,7 +284,9 @@ export default function NewRoundForm(props: Props): JSX.Element {
 						name='registrationDeadline'
 						render={({ field }) => (
 							<FormItem className='flex flex-col items-start w-full'>
-								<FormLabel className='mr-2 font-bold'>Round Name</FormLabel>
+								<FormLabel className='mr-2 font-bold'>
+									Registration deadline
+								</FormLabel>
 								<FormControl>
 									<input type='datetime-local' className='w-full' {...field} />
 								</FormControl>
@@ -284,7 +299,9 @@ export default function NewRoundForm(props: Props): JSX.Element {
 						name='allocationDeadline'
 						render={({ field }) => (
 							<FormItem className='flex flex-col items-start w-full'>
-								<FormLabel className='mr-2 font-bold'>Round Name</FormLabel>
+								<FormLabel className='mr-2 font-bold'>
+									Allocation deadline
+								</FormLabel>
 								<FormControl>
 									<input type='datetime-local' className='w-full' {...field} />
 								</FormControl>
