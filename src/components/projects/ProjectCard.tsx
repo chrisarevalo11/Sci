@@ -11,7 +11,7 @@ type Props = {
 export default function ProjectCard(props: Props): JSX.Element {
 	const { project, round } = props
 	return (
-		<div className='rounded-tl-3xl rounded-br-3xl !w-[290px] !h-[300px] flex flex-col overflow-hidden'>
+		<div className='rounded-tl-3xl rounded-br-3xl w-full max-w-[290px] h-full min-h-[300px] max-h-[300px] flex flex-col overflow-hidden'>
 			<div className='h-1/3 w-full relative'>
 				<img
 					src={project.banner}
@@ -24,9 +24,9 @@ export default function ProjectCard(props: Props): JSX.Element {
 					className='absolute size-10 left-5 -bottom-5'
 				/>
 			</div>
-			<div className='flex flex-col gap-4 p-4 bg-customBlack text-customWhite'>
+			<div className='flex flex-col h-2/3 gap-4 p-4 bg-customBlack text-customWhite'>
 				<h4 className='text-right line-clamp-1'>{project.name}</h4>
-				<p className='line-clamp-3'>{project.description}</p>
+				<p className='line-clamp-3 min-h-[72px]'>{project.description}</p>
 				<Link
 					className='btn mx-auto btn-green'
 					to={`/app/projects/${project.recipientId}`}
