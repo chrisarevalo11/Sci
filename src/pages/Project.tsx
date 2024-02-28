@@ -17,7 +17,7 @@ export default function ProjectComponent(): JSX.Element {
 	const { round, project }: { round: Round; project: Project } = location.state
 
 	const { address } = useAccount()
-	const { alloContract, qVSimpleStrategyContract } = getContracts()
+	const { allo, qVSimpleStrategy } = getContracts()
 	const { getLastRound, updateRound } = roundsApiFirebase()
 
 	const [loading, setLoading] = useState<boolean>(true)
@@ -45,14 +45,14 @@ export default function ProjectComponent(): JSX.Element {
 
 			console.log('Este es el monto que se va a enviar: ', amount)
 
-			const fundPoolTx = await alloContract
+			const fundPoolTx = await allo
 				.connect(web3Signer)
 				.fundPool(round.poolId, amount, { gasLimit: GAS_LIMIT })
 			await fundPoolTx.wait()
 
 			// TODO: Stepeer
 
-			const votes: bigint = await qVSimpleStrategyContract(round.address)
+			const votes: bigint = await qVSimpleStrategy(round.address)
 				.connect(web3Provider)
 				.calculateAdditionalEffectiveVotes(address, project.recipientId, 100)
 
@@ -67,14 +67,14 @@ export default function ProjectComponent(): JSX.Element {
 				allocateDataArray
 			)
 
-			const allocateFundsTx = await alloContract
+			const allocateFundsTx = await allo
 				.connect(web3Signer)
 				.allocate(round.poolId, allocateDataBytes, { gasLimit: GAS_LIMIT })
 
 			await allocateFundsTx.wait()
 
 			console.log(
-				await qVSimpleStrategyContract(round.address)
+				await qVSimpleStrategy(round.address)
 					.connect(web3Provider)
 					.getRecipient(project.recipientId)
 			)
