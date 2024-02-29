@@ -5,6 +5,14 @@ import { useAccount } from 'wagmi'
 import CreateCard from '@/components/projects/CreateCard'
 import DistributeCard from '@/components/projects/DistributeCard'
 import ProjectCard from '@/components/projects/ProjectCard'
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
@@ -22,10 +30,10 @@ export default function Projects(): JSX.Element {
 
 	const projects: Project[] = lastRound.projects
 
-	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
+	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
 		new Date()
 	)
-	const [registraionEndTime, setRegistrationEndTime] = useState<Date>(
+	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
 		new Date()
 	)
 
@@ -59,16 +67,29 @@ export default function Projects(): JSX.Element {
 
 	return (
 		<section className='w-full h-[max(100%, fit-content)] p-4 md:p-10 relative md:overflow-hidden'>
-			<header className='flex justify-end pb-3 border-b-4 items-center border-customBlack border-dashed'>
+			<header className='flex md:justify-between justify-end pb-3 border-b-4 items-center border-customBlack border-dashed'>
+				<Select>
+					<SelectTrigger className='w-[180px]'>
+						<SelectValue placeholder='Select round' />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectGroup>
+							<SelectItem value='apple'>Apple</SelectItem>
+							<SelectItem value='banana'>Banana</SelectItem>
+							<SelectItem value='blueberry'>Blueberry</SelectItem>
+							<SelectItem value='grapes'>Grapes</SelectItem>
+							<SelectItem value='pineapple'>Pineapple</SelectItem>
+						</SelectGroup>
+					</SelectContent>
+				</Select>
 				<h2>Projects</h2>
 			</header>
 			<div className='grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 mt-10 justify-items-center'>
-				{new Date() > allocationEndTime && address === SCI_ADMIN_ADDRESS ? (
+				{new Date() > allocationEndTime && address === SCI_ADMIN_ADDRESS && (
 					<DistributeCard projects={projects} round={lastRound} />
-				) : (
-					new Date() > registraionStartTime &&
-					new Date() < registraionEndTime && <CreateCard />
 				)}
+				{new Date() > registrationStartTime &&
+					new Date() < registrationEndTime && <CreateCard />}
 				{!lastRoundFetched ? (
 					Array.from({ length: 12 }).map((_, index) => (
 						<Skeleton
@@ -90,19 +111,4 @@ export default function Projects(): JSX.Element {
 			</div>
 		</section>
 	)
-}
-
-const projectTest: Project = {
-	banner:
-		'https://www.brightidea.com/wp-content/uploads/Who_Participates_in_a_Hackathon.png',
-	description:
-		'This is a mock description for a mock project that I created for testing purposes of the Sci protocol',
-	github: 'https://github.com',
-	logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/512px-LEGO_logo.svg.png',
-	name: 'DeSci Colombia',
-	recipientId: '0x7753E5f36f20B14fFb6b6a61319Eb66f63abdb0b',
-	slogan: 'This is a slogan',
-	tags: [],
-	twitter: '@comoes',
-	website: 'https://www.lego.com'
 }
