@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
@@ -25,7 +25,6 @@ export default function Dashboard(): JSX.Element {
 		if (!lastRoundFetched) {
 			dispatch(getLastRound())
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [address])
 
@@ -35,7 +34,7 @@ export default function Dashboard(): JSX.Element {
 				<h2>Dashboard</h2>
 			</header>
 			<div className='mt-10 flex flex-col justify-center items-center'>
-				<NewRoundForm />
+				<NewRoundForm lastRoundFetched={lastRoundFetched} />
 			</div>
 			<img
 				src='/images/slime-no-bg.webp'

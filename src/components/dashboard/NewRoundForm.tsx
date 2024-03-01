@@ -20,6 +20,7 @@ import { Metadata } from '@/models/metadata.model'
 import { Round } from '@/models/round.model'
 import { AppDispatch } from '@/store'
 import { setRound, setRoundFetched } from '@/store/slides/roundslice'
+import { setLoading } from '@/store/slides/uiSlice'
 import {
 	convertFileToBase64,
 	convertTimestampToDate,
@@ -48,8 +49,13 @@ const formSchema = z.object({
 	// 	.min(1, { message: 'Allocation deadline is required' })
 })
 
-export default function NewRoundForm(): JSX.Element {
-	const [loading, setLoading] = useState<boolean>(false)
+type Props = {
+	lastRoundFetched: boolean
+}
+
+export default function NewRoundForm(props: Props): JSX.Element {
+	const { lastRoundFetched } = props
+
 	const [banner, setBanner] = useState<string | ArrayBuffer | null>('')
 	const { addRound, getRoundsLength } = roundsApiFirebase()
 	const { allo, daiMock, qVSimpleStrategy } = getContracts()
@@ -70,6 +76,7 @@ export default function NewRoundForm(): JSX.Element {
 		values: z.infer<typeof formSchema>
 	) => {
 		try {
+			dispatch(setRoundFetched(false))
 			const web3Signer: ethers.JsonRpcSigner = await getFrontendSigner()
 
 			// const name: string = values.name
@@ -192,12 +199,13 @@ export default function NewRoundForm(): JSX.Element {
 			}
 
 			await addRound(round)
-			dispatch(setRoundFetched(false))
+			dispatch(setRound(round))
+			dispatch(setRoundFetched(true))
 			setLoading(false)
 		} catch (error) {
 			console.error(error)
 			alert('Error: Look at console')
-			setLoading(false)
+			dispatch(setRoundFetched(true))
 		}
 	}
 
@@ -312,9 +320,9 @@ export default function NewRoundForm(): JSX.Element {
 					<button
 						className='btn btn-green !mt-5'
 						type='submit'
-						disabled={loading}
+						disabled={!lastRoundFetched}
 					>
-						{loading ? 'Loading...' : 'Create Round'}
+						{lastRoundFetched ? 'Create Round' : 'Loading...'}
 					</button>
 				</form>
 			</Form>

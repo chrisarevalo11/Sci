@@ -76,7 +76,7 @@ export default function Projects(): JSX.Element {
 			dispatch(getRounds())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [lastRoundFetched, roundsFetched])
+	}, [address, lastRoundFetched, roundsFetched])
 
 	return (
 		<section className='w-full h-[max(100%, fit-content)] p-4 md:p-10 relative md:overflow-hidden'>
@@ -110,7 +110,9 @@ export default function Projects(): JSX.Element {
 							address === SCI_ADMIN_ADDRESS && (
 								<DistributeCard projects={projects} round={lastRound} />
 							)}
-						{!lastRound.donators.includes(address as string) &&
+						{!lastRound.projects.some(
+							projects => projects.recipientId === address
+						) &&
 							new Date() > registrationStartTime &&
 							new Date() < registrationEndTime &&
 							address !== SCI_ADMIN_ADDRESS && <CreateCard />}

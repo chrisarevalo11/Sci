@@ -1,6 +1,7 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation, useParams } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import Github from '@/components/icons/Github'
 import Globe from '@/components/icons/Globe'
@@ -13,36 +14,65 @@ import { getContracts } from '@/helpers/contracts'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
 import { AppDispatch, useAppSelector } from '@/store'
-import { getRound } from '@/store/thunks/round.thunk'
-import { formatAddress } from '@/utils'
+import { getLastRound } from '@/store/thunks/round.thunk'
+import { convertTimestampToDate, formatAddress } from '@/utils'
 
 export default function ProjectComponent(): JSX.Element {
+	const { address } = useAccount()
+
+	const dispatch = useDispatch<AppDispatch>()
 	const location = useLocation()
 	const { recipientId } = useParams()
 
 	const { round, project }: { round: Round; project: Project } = location.state
 
-	const dispatch = useDispatch<AppDispatch>()
+	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
+	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
+		new Date()
+	)
+
 	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
 
 	const getStates = async () => {
+		setAllocationEndTime(
+			new Date(convertTimestampToDate(round.allocationEndTime))
+		)
+		setAllocationStartTime(
+			new Date(convertTimestampToDate(round.allocationStartTime))
+		)
+		setRegistrationEndTime(
+			new Date(convertTimestampToDate(round.registrationEndTime))
+		)
+		setRegistrationStartTime(
+			new Date(convertTimestampToDate(round.registrationStartTime))
+		)
+
 		const { qVSimpleStrategy } = getContracts()
+
+		if (!recipientId) {
+			return
+		}
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const recipientContract: any = await qVSimpleStrategy(
 			round.address
-		).getRecipient('0x9d19c41De1D71Be072FAeCE30E5AB6519382E23C')
+		).getRecipient(recipientId)
 		console.table(recipientContract)
 	}
 
 	useEffect(() => {
 		getStates()
 		if (!lastRoundFetched) {
-			dispatch(getRound())
+			dispatch(getLastRound())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [lastRoundFetched])
-
+	}, [address])
 	return (
 		<section className='p-2 md:p-10 h-[max(100%, fit-content)] w-full'>
 			<Suspense
@@ -142,24 +172,34 @@ export default function ProjectComponent(): JSX.Element {
 							</div>
 						</div>
 						<div className='hidden lg:block'>
-							{/* {new Date() > allocationStartTime &&
-								new Date() < allocationEndTime && ( */}
-							<Dialog>
-								<DialogTrigger>
-									<button className='btn btn-green text-lg md:px-16'>
-										Donate
-									</button>
-								</DialogTrigger>
-								<DonateModal round={round} project={project} />
-							</Dialog>
-							{/* )} */}
-
 							{round.distributed && (
 								<header>
 									<h4 className=''>Distributed:</h4>
 									<h5>1000 DAI 💸</h5>
 								</header>
 							)}
+							{!round.distributed &&
+								Date.now() > allocationEndTime.getTime() && (
+									<button
+										className='btn btn-green text-lg md:px-16'
+										disabled={true}
+									>
+										Waiting distribution
+									</button>
+								)}
+							{recipientId !== address &&
+								Date.now() > allocationEndTime.getTime() &&
+								Date.now() < registrationEndTime.getTime() && (
+									<Dialog>
+										<DialogTrigger>
+											<button className='btn btn-green text-lg md:px-16'>
+												Donate
+											</button>
+										</DialogTrigger>
+										<DonateModal round={round} project={project} />
+									</Dialog>
+								)}
+
 							<div className='mt-6 flex gap-3 justify-center flex-col items-start'>
 								<h5>Media</h5>
 								<a

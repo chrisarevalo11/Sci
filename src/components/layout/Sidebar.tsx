@@ -9,10 +9,13 @@ import { convertTimestampToDate } from '@/utils'
 
 export default function Sidebar(): JSX.Element {
 	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
-	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
+	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
 		new Date()
 	)
-	const [registraionEndTime, setRegistrationEndTime] = useState<Date>(
+	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
 		new Date()
 	)
 
@@ -24,6 +27,9 @@ export default function Sidebar(): JSX.Element {
 	const getStates = async () => {
 		setAllocationEndTime(
 			new Date(convertTimestampToDate(lastRound.allocationEndTime))
+		)
+		setAllocationStartTime(
+			new Date(convertTimestampToDate(lastRound.allocationStartTime))
 		)
 		setRegistrationEndTime(
 			new Date(convertTimestampToDate(lastRound.registrationEndTime))
@@ -59,40 +65,54 @@ export default function Sidebar(): JSX.Element {
 				) : (
 					<>
 						<img
-							src={lastRound.image}
+							src={
+								lastRound.image ||
+								'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F1.bp.blogspot.com%2F-OfCgL8DBaa8%2FVjzSupDXtrI%2FAAAAAAAAAhE%2FaTAeDA-5oyY%2Fs1600%2Fcave-paintings-lascaux.jpg&f=1&nofb=1&ipt=b52c45465d631d07392b0a1778015d5095ef055cfa2a2a6f69dfd5bca0ee921c&ipo=images'
+							}
 							alt='Round Thumbnail'
 							className='h-[150px] w-full rounded-xl'
 						/>
 						<header>
-							<h5>{lastRound.name}</h5>
+							<h5>{lastRound.name || 'Zero rounds'}</h5>
 							<div className='flex items-center gap-2 mt-2'>
 								<div
 									className={`size-2 rounded-full ${
-										new Date() > registraionStartTime &&
-										new Date() < registraionEndTime
+										new Date() > registrationStartTime &&
+										new Date() < registrationEndTime
 											? 'bg-green-700'
 											: 'bg-red-700'
 									}`}
 								></div>
-								{new Date() > registraionStartTime &&
-								new Date() < registraionEndTime
+								{new Date() > registrationStartTime &&
+								new Date() < registrationEndTime
 									? ' Opened'
 									: ' Closed'}
 							</div>
 						</header>
-						{lastRound.distributed ? (
+						{lastRound.distributed && (
 							<section className='space-2 2xl:space-y-4'>
 								<StatCard title='Round completed' stat={''} />
 							</section>
-						) : null}
-						{Date.now() < registraionEndTime.getTime() ? (
+						)}
+						{/* TODO: Fix Countdown */}
+						{Date.now() < registrationStartTime.getTime() && (
+							<div className='flex items-center justify-between px-2 gap-4'>
+								<h5 className='flex flex-col text-left'>
+									<span>Waiting</span> <span>start round</span>
+								</h5>
+								<Countdown targetDate={allocationStartTime} />
+							</div>
+						)}
+						{Date.now() > registrationStartTime.getTime() &&
+						Date.now() < registrationEndTime.getTime() ? (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
 									<span>Registra...</span> <span>time</span>
 								</h5>
-								<Countdown targetDate={registraionEndTime} />
+								<Countdown targetDate={registrationEndTime} />
 							</div>
-						) : Date.now() < allocationEndTime.getTime() ? (
+						) : Date.now() > allocationStartTime.getTime() &&
+						  Date.now() < allocationEndTime.getTime() ? (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
 									<span>Votin...</span> <span>time</span>
@@ -103,19 +123,19 @@ export default function Sidebar(): JSX.Element {
 						<section className='space-y-2 2xl:space-y-4'>
 							<StatCard
 								title='Total in pool'
-								stat={`${lastRound.totalPool} DAI`}
+								stat={`${lastRound.totalPool || 0} DAI`}
 							/>
 							<StatCard
 								title='Matching pool'
-								stat={`${lastRound.machingPool} DAI`}
+								stat={`${lastRound.machingPool || 0} DAI`}
 							/>
 							<StatCard
 								title='Total donations'
-								stat={`${lastRound.donations} DAI`}
+								stat={`${lastRound.donations || 0} DAI`}
 							/>
 							<StatCard
 								title='Total donators'
-								stat={`${lastRound.donators.length ? lastRound.donators.length : 0}`}
+								stat={`${lastRound.donators?.length || 0}`}
 							/>
 						</section>
 					</>
