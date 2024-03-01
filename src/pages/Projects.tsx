@@ -88,8 +88,9 @@ export default function Projects(): JSX.Element {
 				{new Date() > allocationEndTime && address === SCI_ADMIN_ADDRESS && (
 					<DistributeCard projects={projects} round={lastRound} />
 				)}
-				{new Date() > registrationStartTime &&
-					new Date() < registrationEndTime && <CreateCard />}
+				{/* {new Date() > registrationStartTime && */}
+				{/* new Date() < registrationEndTime && <CreateCard />} */}
+				<CreateCard />
 				{!lastRoundFetched ? (
 					Array.from({ length: 12 }).map((_, index) => (
 						<Skeleton
