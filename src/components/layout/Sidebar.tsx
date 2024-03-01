@@ -8,18 +8,17 @@ import { useAppSelector } from '@/store'
 import { convertTimestampToDate } from '@/utils'
 
 export default function Sidebar(): JSX.Element {
-	const lastRound: Round = useAppSelector(state => state.round.lastRound)
-
-	const lastRoundFetched: boolean = useAppSelector(
-		state => state.round.lastRoundFetched
-	)
-
 	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
 	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
 		new Date()
 	)
 	const [registraionEndTime, setRegistrationEndTime] = useState<Date>(
 		new Date()
+	)
+
+	const lastRound: Round = useAppSelector(state => state.round.lastRound)
+	const lastRoundFetched: boolean = useAppSelector(
+		state => state.round.lastRoundFetched
 	)
 
 	const getStates = async () => {

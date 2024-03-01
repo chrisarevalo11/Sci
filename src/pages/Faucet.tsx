@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ERC20Details } from '@/models/ERC20Details.model'
 import { AppDispatch, useAppSelector } from '@/store'
 import { getERC20Details } from '@/store/thunks/erc20details.thunk'
+import { getLastRound } from '@/store/thunks/round.thunk'
 import { formatAddress } from '@/utils'
 import {
 	ALLO_CONTRACT_ADDRESS,
@@ -21,6 +22,8 @@ export default function Faucet(): JSX.Element {
 
 	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
+
+	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
 
 	const erc20Details: ERC20Details = useAppSelector(
 		state => state.erc20Details.erc20Details
@@ -34,6 +37,10 @@ export default function Faucet(): JSX.Element {
 		if (!address) {
 			navigate('/app/projects')
 			return
+		}
+
+		if (!lastRoundFetched) {
+			dispatch(getLastRound())
 		}
 
 		dispatch(getERC20Details(address as string))

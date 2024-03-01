@@ -23,15 +23,9 @@ import { convertTimestampToDate } from '@/utils'
 import { SCI_ADMIN_ADDRESS } from '@/utils/variables/constants'
 
 export default function Projects(): JSX.Element {
-	const dispatch = useDispatch<AppDispatch>()
-
 	const { address } = useAccount()
-	const lastRound: Round = useAppSelector(state => state.round.lastRound)
-	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
-	const rounds: Round[] = useAppSelector(state => state.round.rounds)
-	const roundsFetched = useAppSelector(state => state.round.roundsFetched)
 
-	const projects: Project[] = lastRound.projects
+	const dispatch = useDispatch<AppDispatch>()
 
 	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
 	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
@@ -40,6 +34,13 @@ export default function Projects(): JSX.Element {
 	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
 		new Date()
 	)
+
+	const lastRound: Round = useAppSelector(state => state.round.lastRound)
+	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
+	const rounds: Round[] = useAppSelector(state => state.round.rounds)
+	const roundsFetched = useAppSelector(state => state.round.roundsFetched)
+
+	const projects: Project[] = lastRound.projects
 
 	const getStates = async () => {
 		setRegistrationStartTime(
