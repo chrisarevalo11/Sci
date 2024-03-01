@@ -25,26 +25,22 @@ export default function MintCard(props: Props): JSX.Element {
 				This is a test DAI faucet that will allow you to interact with Sci. By
 				clicking the GET button below you will receive 1,000 DAI.
 			</p>
-			{!erc20DetailsFetched ? (
-				'Loading...'
-			) : (
-				<div className='flex gap-4 items-center'>
-					<p>
-						<span className='font-dela mr-2'>Balance:</span>
-						{erc20Details.balance}
-					</p>
-					<p>
-						<span className='font-dela mr-2'>Allowance: </span>
-						{erc20Details.allowance}
-					</p>
-				</div>
-			)}
+			<div className='flex gap-4 items-center'>
+				<p>
+					<span className='font-dela mr-2'>Balance:</span>
+					{erc20Details.balance}
+				</p>
+				<p>
+					<span className='font-dela mr-2'>Allowance: </span>
+					{erc20Details.allowance}
+				</p>
+			</div>
 			<button
 				className='btn btn-green mt-3'
 				onClick={onMint}
 				disabled={!erc20DetailsFetched}
 			>
-				1,000 DAI
+				{erc20DetailsFetched ? '1,000 DAI' : 'Loading...'}
 			</button>
 		</div>
 	)
