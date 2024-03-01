@@ -80,7 +80,7 @@ export default function Faucet(): JSX.Element {
 			<img
 				src='/images/slime-no-bg.webp'
 				alt='slime'
-				className='absolute rotate-45 -z-10 right-[-20px] top-[100px] '
+				className='fixed rotate-45 -z-10 right-[-20px] top-[150px] '
 			/>
 		</section>
 	)
