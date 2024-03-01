@@ -9,7 +9,7 @@ export const ALLO_PROFILE_ID: string =
 	'0xbd71c97162a5a1b0c45de7e244d7aa9b028ac578b6a136f356edd0df7a84bb59'
 
 // Messages
-export const ERROR_MESSAGE = 'Error: Look at console'
+export const ERROR_MESSAGE = 'Error, please try again.'
 export const ETHEREUM_OBJECT_NOT_FOUND = 'Ethereum object not found'
 
 // Struct Types
