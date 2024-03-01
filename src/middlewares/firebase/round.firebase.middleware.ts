@@ -10,7 +10,6 @@ import {
 } from 'firebase/firestore'
 
 import { database } from '@/config/firebase.config.js'
-import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
 import { FIREBASE_COLLECTION_ROUNDS } from '@/utils/variables/constants'
 
@@ -23,6 +22,37 @@ export function roundsApiFirebase() {
 			console.log('Round added with ID: ', docRef.id)
 		} catch (error) {
 			console.error('Error adding profile: ', error)
+		}
+	}
+
+	const getRoundById = async (id: number): Promise<Round> => {
+		try {
+			const querySnapshot = await getDocs(
+				query(roundsCollectionRef, where('id', '==', id))
+			)
+			if (!querySnapshot.empty) {
+				return querySnapshot.docs[0].data() as Round
+			} else {
+				console.log('No round found with the given ID')
+				return {} as Round
+			}
+		} catch (error) {
+			console.error('Error getting round: ', error)
+			return {} as Round
+		}
+	}
+
+	const getRounds = async (): Promise<Round[]> => {
+		try {
+			const querySnapshot = await getDocs(roundsCollectionRef)
+			const rounds: Round[] = []
+			querySnapshot.forEach(doc => {
+				rounds.push(doc.data() as Round)
+			})
+			return rounds
+		} catch (error) {
+			console.error('Error getting rounds: ', error)
+			return []
 		}
 	}
 
@@ -72,7 +102,9 @@ export function roundsApiFirebase() {
 
 	return {
 		addRound,
+		getRoundById,
 		getLastRound,
+		getRounds,
 		getRoundsLength,
 		updateRound
 	}

@@ -6,6 +6,8 @@ import { createSlice, PayloadAction, Slice } from '@reduxjs/toolkit'
 interface InitialState {
 	lastRound: Round
 	lastRoundFetched: boolean
+	rounds: Round[]
+	roundsFetched: boolean
 }
 
 const initialState: InitialState = {
@@ -23,13 +25,16 @@ const initialState: InitialState = {
 		name: '',
 		poolId: 0,
 		profileId: '',
+		projects: [],
 		registrationEndTime: 0,
 		registrationStartTime: 0,
 		registryGating: false,
 		reviewThreshold: 0,
 		totalPool: 0
 	},
-	lastRoundFetched: false
+	lastRoundFetched: false,
+	rounds: [],
+	roundsFetched: false
 }
 
 export const roundSlice: Slice<InitialState> = createSlice({
@@ -45,10 +50,22 @@ export const roundSlice: Slice<InitialState> = createSlice({
 		},
 		setRoundFetched: (state, action: PayloadAction<boolean>) => {
 			state.lastRoundFetched = action.payload
+		},
+		setRounds: (state, action: PayloadAction<Round[]>) => {
+			state.rounds = action.payload
+		},
+		setRoundsFetched: (state, action: PayloadAction<boolean>) => {
+			state.roundsFetched = action.payload
 		}
 	}
 })
 
-export const { destroyRound, setRound, setRoundFetched } = roundSlice.actions
+export const {
+	destroyRound,
+	setRound,
+	setRoundFetched,
+	setRounds,
+	setRoundsFetched
+} = roundSlice.actions
 
 export default roundSlice.reducer
