@@ -33,25 +33,13 @@ export default function Projects(): JSX.Element {
 
 	const projects: Project[] = lastRound.projects
 
-	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
-		new Date()
-	)
+	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
 	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
 		new Date()
 	)
-
-	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
-
-	// TODO: function isn't work
-	const changeRound = async (id: number) => {
-		const roundSelected: Round | undefined = rounds.find(
-			round => round.id === id
-		)
-
-		if (roundSelected) {
-			dispatch(setRound(roundSelected))
-		}
-	}
+	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
+		new Date()
+	)
 
 	const getStates = async () => {
 		setRegistrationStartTime(
@@ -64,6 +52,17 @@ export default function Projects(): JSX.Element {
 		setAllocationEndTime(
 			new Date(convertTimestampToDate(lastRound.allocationEndTime))
 		)
+	}
+
+	// TODO: function isn't work
+	const changeRound = async (id: number) => {
+		const roundSelected: Round | undefined = rounds.find(
+			round => round.id === id
+		)
+
+		if (roundSelected) {
+			dispatch(setRound(roundSelected))
+		}
 	}
 
 	useEffect(() => {

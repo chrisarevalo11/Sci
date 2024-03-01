@@ -1,24 +1,20 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import Countdown from '@/components/layout/Countdown'
 import StatCard from '@/components/layout/StatCard'
 import { Skeleton } from '@/components/ui/skeleton'
-import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Round } from '@/models/round.model'
-import { AppDispatch, useAppSelector } from '@/store'
-import { getRound } from '@/store/thunks/round.thunk'
+import { useAppSelector } from '@/store'
 import { convertTimestampToDate } from '@/utils'
 
 export default function Sidebar(): JSX.Element {
-	const dispatch = useDispatch<AppDispatch>()
-
 	const lastRound: Round = useAppSelector(state => state.round.lastRound)
 
 	const lastRoundFetched: boolean = useAppSelector(
 		state => state.round.lastRoundFetched
 	)
 
+	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
 	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
 		new Date()
 	)
@@ -26,30 +22,21 @@ export default function Sidebar(): JSX.Element {
 		new Date()
 	)
 
-	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
-		new Date()
-	)
-	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
-
 	const getStates = async () => {
-		setRegistrationStartTime(
-			new Date(convertTimestampToDate(lastRound.registrationStartTime))
+		setAllocationEndTime(
+			new Date(convertTimestampToDate(lastRound.allocationEndTime))
 		)
 		setRegistrationEndTime(
 			new Date(convertTimestampToDate(lastRound.registrationEndTime))
 		)
-		setAllocationStartTime(
-			new Date(convertTimestampToDate(lastRound.allocationStartTime))
-		)
-		setAllocationEndTime(
-			new Date(convertTimestampToDate(lastRound.allocationEndTime))
+		setRegistrationStartTime(
+			new Date(convertTimestampToDate(lastRound.registrationStartTime))
 		)
 	}
 
 	useEffect(() => {
 		getStates()
 
-		dispatch(getRound())
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [lastRoundFetched])
 
@@ -94,17 +81,22 @@ export default function Sidebar(): JSX.Element {
 									: ' Closed'}
 							</div>
 						</header>
+						{lastRound.distributed ? (
+							<section className='space-2 2xl:space-y-4'>
+								<StatCard title='Round completed' stat={''} />
+							</section>
+						) : null}
 						{Date.now() < registraionEndTime.getTime() ? (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
-									<span>time</span> <span>left</span>
+									<span>Registra...</span> <span>time</span>
 								</h5>
 								<Countdown targetDate={registraionEndTime} />
 							</div>
 						) : Date.now() < allocationEndTime.getTime() ? (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
-									<span>time</span> <span>left</span>
+									<span>Votin...</span> <span>time</span>
 								</h5>
 								<Countdown targetDate={allocationEndTime} />
 							</div>
@@ -124,7 +116,7 @@ export default function Sidebar(): JSX.Element {
 							/>
 							<StatCard
 								title='Total donators'
-								stat={`${lastRound.donators ? lastRound.donators : 0}`}
+								stat={`${lastRound.donators.length ? lastRound.donators.length : 0}`}
 							/>
 						</section>
 					</>
