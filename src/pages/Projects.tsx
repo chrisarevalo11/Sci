@@ -85,12 +85,15 @@ export default function Projects(): JSX.Element {
 				<h2>Projects</h2>
 			</header>
 			<div className='grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 mt-10 justify-items-center'>
-				{new Date() > allocationEndTime && address === SCI_ADMIN_ADDRESS && (
-					<DistributeCard projects={projects} round={lastRound} />
-				)}
-				{/* {new Date() > registrationStartTime && */}
-				{/* new Date() < registrationEndTime && <CreateCard />} */}
-				<CreateCard />
+				{!lastRound.distributed &&
+					new Date() > allocationEndTime &&
+					address === SCI_ADMIN_ADDRESS && (
+						<DistributeCard projects={projects} round={lastRound} />
+					)}
+				{!lastRound.donators.includes(address as string) &&
+					new Date() > registrationStartTime &&
+					new Date() < registrationEndTime &&
+					address !== SCI_ADMIN_ADDRESS && <CreateCard />}
 				{!lastRoundFetched ? (
 					Array.from({ length: 12 }).map((_, index) => (
 						<Skeleton
