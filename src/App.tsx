@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { HashRouter, Route, Routes } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 import { useAccount } from 'wagmi'
 
 import Home from '@/components/home/Home'
 import Layout from '@/components/layout/Layout'
-import { Toaster } from '@/components/ui/toaster'
 import CreateProject from '@/pages/CreateProject'
 import Dashboard from '@/pages/Dashboard'
 import Faucet from '@/pages/Faucet'
@@ -14,6 +14,8 @@ import { AppDispatch } from '@/store'
 
 import ProjectComponent from './pages/Project'
 import { destroyERC20Details } from './store/slides/erc20Details.slice'
+
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
 	const { isDisconnected } = useAccount()
@@ -43,7 +45,7 @@ function App() {
 					</Route>
 				</Routes>
 			</HashRouter>
-			<Toaster />
+			<ToastContainer />
 		</>
 	)
 }

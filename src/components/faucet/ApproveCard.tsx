@@ -2,8 +2,6 @@ import { useDispatch } from 'react-redux'
 
 import { AppDispatch } from '@/store'
 import { approveERC20 } from '@/store/thunks/erc20details.thunk'
-import { formatAddress } from '@/utils'
-import { ALLO_CONTRACT_ADDRESS } from '@/utils/variables/constants'
 
 type Props = {
 	erc20DetailsFetched: boolean
@@ -26,13 +24,6 @@ export default function ApproveCard(props: Props): JSX.Element {
 				above & below) to move test DAI (the amount you specify) from your
 				wallet.
 			</p>
-			<input
-				type='text'
-				className='text-center opacity-60'
-				value={formatAddress(ALLO_CONTRACT_ADDRESS)}
-				disabled
-				readOnly
-			/>
 			<button
 				className='btn btn-green mt-3'
 				disabled={!erc20DetailsFetched}
