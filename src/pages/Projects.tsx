@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'wagmi'
 
@@ -76,27 +76,40 @@ export default function Projects(): JSX.Element {
 			dispatch(getRounds())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, lastRoundFetched, roundsFetched])
+	}, [address, lastRoundFetched, roundsFetched, lastRound.id])
+
+	console.log(lastRound.id.toString())
 
 	return (
 		<section className='w-full h-[max(100%, fit-content)] p-4 md:p-10 relative md:overflow-hidden'>
 			<header className='flex md:justify-between justify-end pb-3 border-b-4 items-center border-customBlack border-dashed'>
-				<Select>
+				<Select
+					onValueChange={e => changeRound(parseInt(e))}
+					defaultValue={
+						lastRound.id !== 0
+							? `${lastRound.id}`
+							: rounds.length > 0
+								? `${rounds[0].id}`
+								: ''
+					}
+				>
 					<SelectTrigger className='w-[180px]'>
 						<SelectValue placeholder='Rounds' />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectGroup>
-							{rounds.map(round => (
-								<SelectItem
-									key={round.id}
-									value={round.id.toString()}
-									onClick={() => changeRound(round.id)}
-									disabled={!roundsFetched}
-								>
-									{`Round ${round.id}`}
-								</SelectItem>
-							))}
+							{rounds
+								.slice()
+								.sort((a, b) => b.id - a.id)
+								.map(round => (
+									<SelectItem
+										key={round.id}
+										value={round.id.toString()}
+										disabled={!roundsFetched}
+									>
+										{`Round ${round.id}`}
+									</SelectItem>
+								))}
 						</SelectGroup>
 					</SelectContent>
 				</Select>
@@ -129,7 +142,7 @@ export default function Projects(): JSX.Element {
 					Array.from({ length: 9 }).map((_, index) => (
 						<Skeleton
 							key={index}
-							className='!w-[290px] !h-[300px] rounded-tl-xl rounded-br-xl'
+							className='w-full !h-[300px] rounded-tl-xl rounded-br-xl'
 						/>
 					))
 				)}

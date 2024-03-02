@@ -56,12 +56,12 @@ export async function createQvSimpleStrategyContract(): Promise<string> {
 		const deployTx = await newRound.deploy(...args)
 		const newRoundAddress = await deployTx.getAddress()
 
-		const round: Round = {
-			id: idString,
-			address: newRoundAddress
-		}
+		// const round: Round = {
+		// 	id: idString,
+		// 	address: newRoundAddress
+		// }
 
-		await addRound(round)
+		// await addRound(round)
 		return newRoundAddress
 	} catch (error) {
 		console.error('Error creating QV Simple Strategy Contract: ', error)
@@ -74,14 +74,14 @@ export async function registerRecipient(
 	data: BytesLike
 ): Promise<string> {
 	try {
-		const { alloContract } = getContracts()
+		const { allo } = getContracts()
 		const privateKey: string = getPrivateKey()
 		const rpcUrl: string = getRpcUrl()
 
 		const provider: ethers.JsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl)
 		const signer: ethers.Wallet = new ethers.Wallet(privateKey, provider)
 
-		const registerRecipientTx = await alloContract
+		const registerRecipientTx = await allo
 			.connect(signer)
 			.registerRecipient(poolId, data, {
 				gasLimit: GAS_LIMIT
@@ -100,14 +100,14 @@ export async function reviewRecipients(
 	recipientStatuses: number[]
 ): Promise<string> {
 	try {
-		const { qVSimpleStrategyContract } = getContracts()
+		const { qVSimpleStrategy } = getContracts()
 		const privateKey: string = getPrivateKey()
 		const rpcUrl: string = getRpcUrl()
 
 		const provider: ethers.JsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl)
 		const signer: ethers.Wallet = new ethers.Wallet(privateKey, provider)
 
-		const reviewRecipientsTx = await qVSimpleStrategyContract(address)
+		const reviewRecipientsTx = await qVSimpleStrategy(address)
 			.connect(signer)
 			.reviewRecipients(recipientIds, recipientStatuses, {
 				gasLimit: GAS_LIMIT
