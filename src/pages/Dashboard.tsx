@@ -1,20 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import NewRoundForm from '@/components/dashboard/NewRoundForm'
-import { profilesApiFirebase } from '@/middlewares/firebase/profile.firebase.middleware'
-import { Profile } from '@/models/profile.model'
-import { ALLO_PROFILE_ID, SCI_ADMIN_ADDRESS } from '@/utils/variables/constants'
+import { AppDispatch, useAppSelector } from '@/store'
+import { getLastRound } from '@/store/thunks/round.thunk'
+import { SCI_ADMIN_ADDRESS } from '@/utils/variables/constants'
 
 export default function Dashboard(): JSX.Element {
 	const { address } = useAccount()
 
-	const { getProfileByAddress } = profilesApiFirebase()
-
-	const [loading, setLoading] = useState<boolean>(true)
-
+	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
+
+	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
+
+	useEffect(() => {
+		if (!address || address !== SCI_ADMIN_ADDRESS) {
+			navigate('/app/projects')
+			return
+		}
+
+		if (!lastRoundFetched) {
+			dispatch(getLastRound())
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [address])
 
 	return (
 		<section className='w-full h-[max(100%, fit-content)] p-4 md:p-10 relative'>
@@ -22,7 +34,7 @@ export default function Dashboard(): JSX.Element {
 				<h2>Dashboard</h2>
 			</header>
 			<div className='mt-10 flex flex-col justify-center items-center'>
-				<NewRoundForm />
+				<NewRoundForm lastRoundFetched={lastRoundFetched} />
 			</div>
 			<img
 				src='/images/slime-no-bg.webp'

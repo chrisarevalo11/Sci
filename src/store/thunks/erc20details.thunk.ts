@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { toast } from 'react-toastify'
 
 import { getFrontendSigner } from '@/helpers'
 import { getContracts } from '@/helpers/contracts'
@@ -33,9 +34,10 @@ export const approveERC20 = createAsyncThunk(
 			await approveTx.wait()
 
 			dispatch(getERC20Details(address))
+			toast.success('Successfully approved')
 		} catch (error) {
 			console.error('❌ ', error)
-			alert(ERROR_MESSAGE)
+			toast.error(ERROR_MESSAGE)
 			dispatch(setERC20DetailsFetched(true))
 		}
 	}
@@ -94,9 +96,10 @@ export const mintERC20 = createAsyncThunk(
 
 			dispatch(setERC20Details(updatedErc20Details))
 			dispatch(setERC20DetailsFetched(true))
+			toast.success('Minted successfully')
 		} catch (error) {
 			console.error('❌ ', error)
-			alert(ERROR_MESSAGE)
+			toast.error(ERROR_MESSAGE)
 			dispatch(setERC20DetailsFetched(true))
 		}
 	}

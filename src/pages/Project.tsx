@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { BytesLike, ethers } from 'ethers'
+import { Suspense, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation, useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
@@ -7,158 +6,89 @@ import { useAccount } from 'wagmi'
 import Github from '@/components/icons/Github'
 import Globe from '@/components/icons/Globe'
 import Twitter from '@/components/icons/Twitter'
+import DonateModal from '@/components/projects/DonateModal'
 import Clipboard from '@/components/ui/Clipboard'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getContracts } from '@/helpers/contracts'
-import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
 import { AppDispatch, useAppSelector } from '@/store'
-import { getRound } from '@/store/thunks/round.thunk'
-import {
-	convertTimestampToDate,
-	formatAddress,
-	toAbiCoder,
-	toDecimal
-} from '@/utils'
-import { ALLOCATE_STRUCT_TYPES, GAS_LIMIT } from '@/utils/variables/constants'
+import { getLastRound } from '@/store/thunks/round.thunk'
+import { convertTimestampToDate, formatAddress } from '@/utils'
 
 export default function ProjectComponent(): JSX.Element {
+	const { address } = useAccount()
+
+	const dispatch = useDispatch<AppDispatch>()
 	const location = useLocation()
 	const { recipientId } = useParams()
 
 	const { round, project }: { round: Round; project: Project } = location.state
 
-	const { address } = useAccount()
-	const { allo, qVSimpleStrategy } = getContracts()
-	const { updateRound } = roundsApiFirebase()
-
-	const [loading, setLoading] = useState<boolean>(true)
-	const dispatch = useDispatch<AppDispatch>()
-
-	const lastRound: Round = useAppSelector(state => state.round.lastRound)
-	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
-
+	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
 	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
 		new Date()
 	)
-	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
+	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
+		new Date()
+	)
+
+	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
 
 	const getStates = async () => {
-		setAllocationStartTime(
-			new Date(convertTimestampToDate(lastRound.allocationStartTime))
-		)
 		setAllocationEndTime(
-			new Date(convertTimestampToDate(lastRound.allocationEndTime))
+			new Date(convertTimestampToDate(round.allocationEndTime))
+		)
+		setAllocationStartTime(
+			new Date(convertTimestampToDate(round.allocationStartTime))
+		)
+		setRegistrationEndTime(
+			new Date(convertTimestampToDate(round.registrationEndTime))
+		)
+		setRegistrationStartTime(
+			new Date(convertTimestampToDate(round.registrationStartTime))
 		)
 
 		const { qVSimpleStrategy } = getContracts()
 
+		if (!recipientId) {
+			return
+		}
+
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const recipientContract: any = await qVSimpleStrategy(
 			round.address
-		).getRecipient('0x9d19c41De1D71Be072FAeCE30E5AB6519382E23C')
+		).getRecipient(recipientId)
 		console.table(recipientContract)
 	}
 
 	useEffect(() => {
 		getStates()
 		if (!lastRoundFetched) {
-			dispatch(getRound())
+			dispatch(getLastRound())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [lastRoundFetched])
-
-	const onFundPool = async () => {
-		try {
-			setLoading(true)
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const ethereum = (window as any).ethereum
-
-			if (!ethereum) {
-				alert('Ethereum object not found')
-				return
-			}
-
-			const web3Provider: ethers.BrowserProvider = new ethers.BrowserProvider(
-				ethereum
-			)
-			await web3Provider.send('eth_requestAccounts', [])
-			const web3Signer: ethers.JsonRpcSigner = await web3Provider.getSigner()
-
-			if (!address) return
-
-			const amount: bigint = toDecimal(100)
-
-			console.log('Este es el monto que se va a enviar: ', amount)
-
-			const fundPoolTx = await allo
-				.connect(web3Signer)
-				.fundPool(round.poolId, amount, { gasLimit: GAS_LIMIT })
-			await fundPoolTx.wait()
-
-			// TODO: Stepeer
-
-			const votes: bigint = await qVSimpleStrategy(round.address)
-				.connect(web3Provider)
-				.calculateAdditionalEffectiveVotes(address, project.recipientId, 100)
-
-			console.log('Votes: ', votes)
-
-			const voiceCredits: number = 100
-
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const allocateDataArray: any[] = [project.recipientId, voiceCredits]
-
-			const allocateDataBytes: BytesLike = toAbiCoder(
-				ALLOCATE_STRUCT_TYPES,
-				allocateDataArray
-			)
-
-			const allocateFundsTx = await allo
-				.connect(web3Signer)
-				.allocate(round.poolId, allocateDataBytes, { gasLimit: GAS_LIMIT })
-
-			await allocateFundsTx.wait()
-
-			console.log(
-				await qVSimpleStrategy(round.address)
-					.connect(web3Provider)
-					.getRecipient(project.recipientId)
-			)
-
-			round.donations = round.donations + 100
-			round.donators = round.donators + 1
-			await updateRound(round)
-
-			setLoading(false)
-		} catch (error) {
-			console.error(error)
-			alert('Error: Look at console')
-			setLoading(false)
-		}
-	}
-
-	useEffect(() => {
-		setLoading(false)
-	}, [])
-
-	console.log(round.poolId)
-
+	}, [address])
 	return (
 		<section className='p-2 md:p-10 h-[max(100%, fit-content)] w-full'>
-			{loading ? (
-				<>
-					<Skeleton className='w-full h-[220px] rounded-xl' />
-					<div className='grid md:grid-cols-2 gap-4 mt-7'>
-						<div className='flex flex-col gap-4'>
-							<Skeleton className='h-[100px] w-full' />
-							<Skeleton className='h-[100px] w-full' />
+			<Suspense
+				fallback={
+					<>
+						<Skeleton className='w-full h-[220px] rounded-xl' />
+						<div className='grid md:grid-cols-2 gap-4 mt-7'>
+							<div className='flex flex-col gap-4'>
+								<Skeleton className='h-[100px] w-full' />
+								<Skeleton className='h-[100px] w-full' />
+							</div>
+							<Skeleton className='h-[150px]' />
 						</div>
-						<Skeleton className='h-[150px]' />
-					</div>
-				</>
-			) : (
+					</>
+				}
+			>
 				<>
 					<div className='relative w-full'>
 						<img
@@ -179,12 +109,7 @@ export default function ProjectComponent(): JSX.Element {
 								<h5 className='text-customGray'>{project.slogan}</h5>
 							</header>
 							<div className='lg:hidden flex flex-col'>
-								<button
-									className='btn btn-green  text-lg px-20'
-									onClick={onFundPool}
-								>
-									Donate
-								</button>
+								<button className='btn btn-green text-lg px-20'>Donate</button>
 								<div className='mt-6 flex gap-3 justify-center flex-col items-start'>
 									<h5>Media</h5>
 									<a
@@ -247,22 +172,34 @@ export default function ProjectComponent(): JSX.Element {
 							</div>
 						</div>
 						<div className='hidden lg:block'>
-							{new Date() > allocationStartTime &&
-								new Date() < allocationEndTime && (
-									<button
-										className='btn btn-green text-lg md:px-16'
-										onClick={onFundPool}
-									>
-										Donate
-									</button>
-								)}
-
 							{round.distributed && (
 								<header>
 									<h4 className=''>Distributed:</h4>
 									<h5>1000 DAI 💸</h5>
 								</header>
 							)}
+							{!round.distributed &&
+								Date.now() > allocationEndTime.getTime() && (
+									<button
+										className='btn btn-green text-lg md:px-16'
+										disabled={true}
+									>
+										Waiting distribution
+									</button>
+								)}
+							{recipientId !== address &&
+								Date.now() > allocationEndTime.getTime() &&
+								Date.now() < registrationEndTime.getTime() && (
+									<Dialog>
+										<DialogTrigger>
+											<button className='btn btn-green text-lg md:px-16'>
+												Donate
+											</button>
+										</DialogTrigger>
+										<DonateModal round={round} project={project} />
+									</Dialog>
+								)}
+
 							<div className='mt-6 flex gap-3 justify-center flex-col items-start'>
 								<h5>Media</h5>
 								<a
@@ -296,7 +233,7 @@ export default function ProjectComponent(): JSX.Element {
 						</div>
 					</div>
 				</>
-			)}
+			</Suspense>
 		</section>
 	)
 }

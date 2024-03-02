@@ -1,55 +1,47 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import Countdown from '@/components/layout/Countdown'
 import StatCard from '@/components/layout/StatCard'
 import { Skeleton } from '@/components/ui/skeleton'
-import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Round } from '@/models/round.model'
-import { AppDispatch, useAppSelector } from '@/store'
-import { getRound } from '@/store/thunks/round.thunk'
+import { useAppSelector } from '@/store'
 import { convertTimestampToDate } from '@/utils'
 
 export default function Sidebar(): JSX.Element {
-	const dispatch = useDispatch<AppDispatch>()
+	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
+	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
+		new Date()
+	)
+	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
+		new Date()
+	)
 
 	const lastRound: Round = useAppSelector(state => state.round.lastRound)
-
 	const lastRoundFetched: boolean = useAppSelector(
 		state => state.round.lastRoundFetched
 	)
 
-	const [registraionStartTime, setRegistrationStartTime] = useState<Date>(
-		new Date()
-	)
-	const [registraionEndTime, setRegistrationEndTime] = useState<Date>(
-		new Date()
-	)
-
-	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
-		new Date()
-	)
-	const [allocationEndTime, setAllocationEndTime] = useState<Date>(new Date())
-
 	const getStates = async () => {
-		setRegistrationStartTime(
-			new Date(convertTimestampToDate(lastRound.registrationStartTime))
-		)
-		setRegistrationEndTime(
-			new Date(convertTimestampToDate(lastRound.registrationEndTime))
+		setAllocationEndTime(
+			new Date(convertTimestampToDate(lastRound.allocationEndTime))
 		)
 		setAllocationStartTime(
 			new Date(convertTimestampToDate(lastRound.allocationStartTime))
 		)
-		setAllocationEndTime(
-			new Date(convertTimestampToDate(lastRound.allocationEndTime))
+		setRegistrationEndTime(
+			new Date(convertTimestampToDate(lastRound.registrationEndTime))
+		)
+		setRegistrationStartTime(
+			new Date(convertTimestampToDate(lastRound.registrationStartTime))
 		)
 	}
 
 	useEffect(() => {
 		getStates()
 
-		dispatch(getRound())
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [lastRoundFetched])
 
@@ -73,38 +65,57 @@ export default function Sidebar(): JSX.Element {
 				) : (
 					<>
 						<img
-							src={lastRound.image}
+							src={
+								lastRound.image ||
+								'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F1.bp.blogspot.com%2F-OfCgL8DBaa8%2FVjzSupDXtrI%2FAAAAAAAAAhE%2FaTAeDA-5oyY%2Fs1600%2Fcave-paintings-lascaux.jpg&f=1&nofb=1&ipt=b52c45465d631d07392b0a1778015d5095ef055cfa2a2a6f69dfd5bca0ee921c&ipo=images'
+							}
 							alt='Round Thumbnail'
 							className='h-[150px] w-full rounded-xl'
 						/>
 						<header>
-							<h5>{lastRound.name}</h5>
+							<h5>{lastRound.name || 'Zero rounds'}</h5>
 							<div className='flex items-center gap-2 mt-2'>
 								<div
 									className={`size-2 rounded-full ${
-										new Date() > registraionStartTime &&
-										new Date() < registraionEndTime
+										new Date() > registrationStartTime &&
+										new Date() < registrationEndTime
 											? 'bg-green-700'
 											: 'bg-red-700'
 									}`}
 								></div>
-								{new Date() > registraionStartTime &&
-								new Date() < registraionEndTime
+								{new Date() > registrationStartTime &&
+								new Date() < registrationEndTime
 									? ' Opened'
 									: ' Closed'}
 							</div>
 						</header>
-						{Date.now() < registraionEndTime.getTime() ? (
+						{lastRound.distributed && (
+							<section className='space-2 2xl:space-y-4'>
+								<StatCard title='Round completed' stat={''} />
+							</section>
+						)}
+						{/* TODO: Fix Countdown */}
+						{Date.now() < registrationStartTime.getTime() && (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
-									<span>time</span> <span>left</span>
+									<span>Waiting</span> <span>start round</span>
 								</h5>
-								<Countdown targetDate={registraionEndTime} />
+								<Countdown targetDate={allocationStartTime} />
 							</div>
-						) : Date.now() < allocationEndTime.getTime() ? (
+						)}
+						{Date.now() > registrationStartTime.getTime() &&
+						Date.now() < registrationEndTime.getTime() ? (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
-									<span>time</span> <span>left</span>
+									<span>Registra...</span> <span>time</span>
+								</h5>
+								<Countdown targetDate={registrationEndTime} />
+							</div>
+						) : Date.now() > allocationStartTime.getTime() &&
+						  Date.now() < allocationEndTime.getTime() ? (
+							<div className='flex items-center justify-between px-2 gap-4'>
+								<h5 className='flex flex-col text-left'>
+									<span>Votin...</span> <span>time</span>
 								</h5>
 								<Countdown targetDate={allocationEndTime} />
 							</div>
@@ -112,19 +123,19 @@ export default function Sidebar(): JSX.Element {
 						<section className='space-y-2 2xl:space-y-4'>
 							<StatCard
 								title='Total in pool'
-								stat={`${lastRound.totalPool} DAI`}
+								stat={`${lastRound.totalPool || 0} DAI`}
 							/>
 							<StatCard
 								title='Matching pool'
-								stat={`${lastRound.machingPool} DAI`}
+								stat={`${lastRound.machingPool || 0} DAI`}
 							/>
 							<StatCard
 								title='Total donations'
-								stat={`${lastRound.donations} DAI`}
+								stat={`${lastRound.donations || 0} DAI`}
 							/>
 							<StatCard
 								title='Total donators'
-								stat={`${lastRound.donators ? lastRound.donators : 0}`}
+								stat={`${lastRound.donators?.length || 0}`}
 							/>
 						</section>
 					</>
