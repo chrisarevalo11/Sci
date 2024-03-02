@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { BytesLike, ethers, ZeroAddress } from 'ethers'
 import { useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useAccount } from 'wagmi'
 import { z } from 'zod'
 
@@ -19,8 +22,11 @@ import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middlew
 import { Project } from '@/models/project.model'
 import { RecipientData } from '@/models/recipient-data.model'
 import { Round } from '@/models/round.model'
+import { AppDispatch } from '@/store'
+import { setRoundFetched, setRoundsFetched } from '@/store/slides/roundslice'
 import { toAbiCoder } from '@/utils'
 import {
+	ERROR_MESSAGE,
 	GAS_LIMIT,
 	RECIPIENT_DATA_STRUCT_TYPES
 } from '@/utils/variables/constants'
@@ -58,12 +64,15 @@ const formSchema = z.object({
 
 export default function CreateProjectForm(): JSX.Element {
 	const { address } = useAccount()
+	const navigate = useNavigate()
 
 	const [loading, setLoading] = useState<boolean>(false)
 	const [round, setRound] = useState<Round | null>(null)
 
 	const { getLastRound, updateRound } = roundsApiFirebase()
 	const { allo } = getContracts()
+
+	const dispatch = useDispatch<AppDispatch>()
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: {
@@ -188,10 +197,16 @@ export default function CreateProjectForm(): JSX.Element {
 			console.log('round', round)
 			await updateRound(round)
 
+			dispatch(setRoundsFetched(false))
+			dispatch(setRoundFetched(false))
+
 			setLoading(false)
+			toast.success('Project created')
+			form.reset()
+			navigate('/app/projects')
 		} catch (error) {
 			console.error(error)
-			alert('Error: Look at console')
+			toast.error(ERROR_MESSAGE)
 			setLoading(false)
 		}
 	}
@@ -225,6 +240,7 @@ export default function CreateProjectForm(): JSX.Element {
 										className='w-full'
 										placeholder='My project'
 										{...field}
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -242,6 +258,7 @@ export default function CreateProjectForm(): JSX.Element {
 										{...field}
 										className='w-full'
 										placeholder='Promoting open science'
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -259,6 +276,7 @@ export default function CreateProjectForm(): JSX.Element {
 										{...field}
 										placeholder='This project is focused on...'
 										className='w-full'
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -278,6 +296,7 @@ export default function CreateProjectForm(): JSX.Element {
 										autoSave='true'
 										className='w-full'
 										{...field}
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -296,6 +315,7 @@ export default function CreateProjectForm(): JSX.Element {
 										accept='image/*'
 										className='w-full'
 										{...field}
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -315,6 +335,7 @@ export default function CreateProjectForm(): JSX.Element {
 										{...field}
 										className='w-full'
 										placeholder='myproject'
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -332,6 +353,7 @@ export default function CreateProjectForm(): JSX.Element {
 										{...field}
 										className='w-full'
 										placeholder='https://github.com/myproject'
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -352,6 +374,7 @@ export default function CreateProjectForm(): JSX.Element {
 										{...field}
 										className='w-full'
 										placeholder='https://myproject.com'
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -370,6 +393,7 @@ export default function CreateProjectForm(): JSX.Element {
 										{...field}
 										className='w-full'
 										placeholder='tech, biology, etc.'
+										disabled={loading}
 									/>
 								</FormControl>
 								<FormMessage />

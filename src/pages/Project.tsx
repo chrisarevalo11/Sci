@@ -180,16 +180,13 @@ export default function ProjectComponent(): JSX.Element {
 							)}
 							{!round.distributed &&
 								Date.now() > allocationEndTime.getTime() && (
-									<button
-										className='btn btn-green text-lg md:px-16'
-										disabled={true}
-									>
+									<p className='font-bold p-1 text-center rounded-xl bg-customGreen/70 text-white'>
 										Waiting distribution
-									</button>
+									</p>
 								)}
 							{recipientId !== address &&
-								Date.now() > allocationEndTime.getTime() &&
-								Date.now() < registrationEndTime.getTime() && (
+								Date.now() > allocationStartTime.getTime() &&
+								Date.now() < allocationEndTime.getTime() && (
 									<Dialog>
 										<DialogTrigger>
 											<button className='btn btn-green text-lg md:px-16'>

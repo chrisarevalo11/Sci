@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import { useAccount } from 'wagmi'
 
 import { getContracts } from '@/helpers/contracts'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
-import { GAS_LIMIT } from '@/utils/variables/constants'
+import { AppDispatch } from '@/store'
+import { setRound, setRoundFetched } from '@/store/slides/roundslice'
+import { ERROR_MESSAGE, GAS_LIMIT } from '@/utils/variables/constants'
 
 type Props = {
 	projects: Project[]
@@ -19,6 +23,8 @@ export default function DistributeCard(props: Props): JSX.Element {
 	const { address } = useAccount()
 	const { updateRound } = roundsApiFirebase()
 	const { allo } = getContracts()
+
+	const dispatch = useDispatch<AppDispatch>()
 
 	const onDistribute = async () => {
 		try {
@@ -56,18 +62,20 @@ export default function DistributeCard(props: Props): JSX.Element {
 					{ gasLimit: GAS_LIMIT }
 				)
 
-			const tx = await distributeTx.wait()
+			await distributeTx.wait()
 
-			if (!round?.distributed) {
-				round.distributed = true
-			}
+			const updatedRound = { ...round, distributed: true }
 
-			await updateRound(round)
+			await updateRound(updatedRound)
+			dispatch(setRound(updatedRound))
+			dispatch(setRoundFetched(true))
 			setLoading(false)
+			toast.success('Distributed funds')
 		} catch (error) {
 			console.error(error)
-			alert('Error: Look at console')
+			toast.error(ERROR_MESSAGE)
 			setLoading(false)
+			dispatch(setRoundFetched(true))
 		}
 	}
 

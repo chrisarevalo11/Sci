@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAccount } from 'wagmi'
 
@@ -76,9 +76,7 @@ export default function Projects(): JSX.Element {
 			dispatch(getRounds())
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [address, lastRoundFetched, roundsFetched, lastRound.id])
-
-	console.log(lastRound.id.toString())
+	}, [address, lastRoundFetched, roundsFetched])
 
 	return (
 		<section className='w-full h-[max(100%, fit-content)] p-4 md:p-10 relative md:overflow-hidden'>
@@ -123,14 +121,14 @@ export default function Projects(): JSX.Element {
 							address === SCI_ADMIN_ADDRESS && (
 								<DistributeCard projects={projects} round={lastRound} />
 							)}
-						{!lastRound.projects.some(
+						{!lastRound.projects?.some(
 							projects => projects.recipientId === address
 						) &&
 							new Date() > registrationStartTime &&
 							new Date() < registrationEndTime &&
 							address !== SCI_ADMIN_ADDRESS && <CreateCard />}
 						{lastRoundFetched &&
-							projects.map((project: Project) => (
+							projects?.map((project: Project) => (
 								<ProjectCard
 									project={project}
 									round={lastRound}

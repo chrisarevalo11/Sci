@@ -210,8 +210,9 @@ export default function NewRoundForm(props: Props): JSX.Element {
 			toast.success('Round created successfully!')
 		} catch (error) {
 			console.error(error)
-			toast.error(ERROR_MESSAGE)
 			setLoading(false)
+			toast.error(ERROR_MESSAGE)
+			dispatch(setRoundFetched(true))
 		}
 	}
 
@@ -248,6 +249,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 										className='w-full'
 										placeholder='Grants Citizens Round: Archimedes’ Lever'
 										{...field}
+										disabled={!lastRoundFetched}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -269,6 +271,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 											field.onChange(event)
 											convertFileToBase64(event, setBanner)
 										}}
+										disabled={!lastRoundFetched}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -287,6 +290,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 										className='w-full'
 										placeholder='10,000 DAI'
 										{...field}
+										disabled={!lastRoundFetched}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -302,7 +306,12 @@ export default function NewRoundForm(props: Props): JSX.Element {
 									Registration Beginning
 								</FormLabel>
 								<FormControl>
-									<input type='datetime-local' className='w-full' {...field} />
+									<input
+										type='datetime-local'
+										className='w-full'
+										{...field}
+										disabled={!lastRoundFetched}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -317,7 +326,12 @@ export default function NewRoundForm(props: Props): JSX.Element {
 									Registration deadline
 								</FormLabel>
 								<FormControl>
-									<input type='datetime-local' className='w-full' {...field} />
+									<input
+										type='datetime-local'
+										className='w-full'
+										{...field}
+										disabled={!lastRoundFetched}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -332,7 +346,12 @@ export default function NewRoundForm(props: Props): JSX.Element {
 									Allocation Beginning
 								</FormLabel>
 								<FormControl>
-									<input type='datetime-local' className='w-full' {...field} />
+									<input
+										type='datetime-local'
+										className='w-full'
+										{...field}
+										disabled={!lastRoundFetched}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -347,7 +366,12 @@ export default function NewRoundForm(props: Props): JSX.Element {
 									Allocation deadline
 								</FormLabel>
 								<FormControl>
-									<input type='datetime-local' className='w-full' {...field} />
+									<input
+										type='datetime-local'
+										className='w-full'
+										{...field}
+										disabled={!lastRoundFetched}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>

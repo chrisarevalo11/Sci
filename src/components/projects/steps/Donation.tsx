@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BytesLike, ethers } from 'ethers'
+import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useAccount } from 'wagmi'
 
@@ -13,6 +14,12 @@ import { getContracts } from '@/helpers/contracts'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
+import { AppDispatch } from '@/store'
+import {
+	setRound,
+	setRoundFetched,
+	setRoundsFetched
+} from '@/store/slides/roundslice'
 import { toAbiCoder, toDecimal } from '@/utils'
 import {
 	ALLOCATE_STRUCT_TYPES,
@@ -33,6 +40,8 @@ export default function Donation(props: Props): JSX.Element {
 	const { updateRound } = roundsApiFirebase()
 
 	const [loading, setLoading] = useState<boolean>(false)
+
+	const dispatch = useDispatch<AppDispatch>()
 
 	const onFundPool = async () => {
 		try {
@@ -94,8 +103,13 @@ export default function Donation(props: Props): JSX.Element {
 			)
 
 			round.donations = round.donations + 100
-			round.donators = round.donators + 1
+			round.totalPool = round.totalPool + 100
+			const isDonator: boolean = round.donators.some(
+				donator => donator === address
+			)
+			if (!isDonator) round.donators.push(address)
 			await updateRound(round)
+			dispatch(setRound(round))
 			setLoading(false)
 			toast.success('Thank you for your donation!')
 		} catch (error) {

@@ -117,7 +117,7 @@ export default function Sidebar(): JSX.Element {
 								<h5 className='flex flex-col text-left'>
 									<span>Voting</span> <span>starts</span>
 								</h5>
-								<Countdown targetDate={allocationEndTime} />
+								<Countdown targetDate={allocationStartTime} />
 							</div>
 						) : Date.now() > allocationStartTime.getTime() &&
 						  Date.now() < allocationEndTime.getTime() ? (
