@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AddressLike, BytesLike, ethers, MaxUint256 } from 'ethers'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 
 import {
@@ -19,17 +20,16 @@ import { InitializeData } from '@/models/initialize-data.model'
 import { Metadata } from '@/models/metadata.model'
 import { Round } from '@/models/round.model'
 import { AppDispatch } from '@/store'
-import { setRound, setRoundFetched } from '@/store/slides/roundslice'
+import { setRoundFetched } from '@/store/slides/roundslice'
 import {
 	convertFileToBase64,
-	convertTimestampToDate,
-	formatAddress,
 	toAbiCoder,
 	toDecimal,
 	toTimestamp
 } from '@/utils'
 import {
 	ALLO_PROFILE_ID,
+	ERROR_MESSAGE,
 	GAS_LIMIT,
 	INITIALIZE_DATA_STRUCT_TYPES,
 	ROUND_ADDRESS
@@ -37,15 +37,21 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const formSchema = z.object({
-	// name: z.string().min(1, { message: 'Name is required' }),
-	// banner: z.string().min(1, { message: 'Banner is required' }),
-	// amount: z.string().min(1, { message: 'Amount is required' }),
-	// registrationDeadline: z
-	// 	.string()
-	// 	.min(1, { message: 'Registration deadline is required' }),
-	// allocationDeadline: z
-	// 	.string()
-	// 	.min(1, { message: 'Allocation deadline is required' })
+	name: z.string().min(1, { message: 'Name is required' }),
+	banner: z.string().min(1, { message: 'Banner is required' }),
+	amount: z.string().min(1, { message: 'Amount is required' }),
+	registrationBegin: z
+		.string()
+		.min(1, { message: 'Registration begin is required' }),
+	registrationDeadline: z
+		.string()
+		.min(1, { message: 'Registration deadline is required' }),
+	allocationBegin: z
+		.string()
+		.min(1, { message: 'Allocation begin is required' }),
+	allocationDeadline: z
+		.string()
+		.min(1, { message: 'Allocation deadline is required' })
 })
 
 export default function NewRoundForm(): JSX.Element {
@@ -60,7 +66,9 @@ export default function NewRoundForm(): JSX.Element {
 			name: '',
 			banner: '',
 			amount: '',
+			registrationBegin: '',
 			registrationDeadline: '',
+			allocationBegin: '',
 			allocationDeadline: ''
 		},
 		resolver: zodResolver(formSchema)
@@ -69,6 +77,8 @@ export default function NewRoundForm(): JSX.Element {
 	const onCreatePoolWithCustomStrategy = async (
 		values: z.infer<typeof formSchema>
 	) => {
+		console.log(values)
+
 		try {
 			const web3Signer: ethers.JsonRpcSigner = await getFrontendSigner()
 
@@ -194,9 +204,10 @@ export default function NewRoundForm(): JSX.Element {
 			await addRound(round)
 			dispatch(setRoundFetched(false))
 			setLoading(false)
+			toast.success('Round created successfully!')
 		} catch (error) {
 			console.error(error)
-			alert('Error: Look at console')
+			toast.error(ERROR_MESSAGE)
 			setLoading(false)
 		}
 	}
@@ -281,11 +292,41 @@ export default function NewRoundForm(): JSX.Element {
 					/>
 					<FormField
 						control={form.control}
+						name='registrationBegin'
+						render={({ field }) => (
+							<FormItem className='flex flex-col items-start w-full'>
+								<FormLabel className='mr-2 font-bold'>
+									Registration Beginning
+								</FormLabel>
+								<FormControl>
+									<input type='datetime-local' className='w-full' {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
 						name='registrationDeadline'
 						render={({ field }) => (
 							<FormItem className='flex flex-col items-start w-full'>
 								<FormLabel className='mr-2 font-bold'>
 									Registration deadline
+								</FormLabel>
+								<FormControl>
+									<input type='datetime-local' className='w-full' {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name='allocationBegin'
+						render={({ field }) => (
+							<FormItem className='flex flex-col items-start w-full'>
+								<FormLabel className='mr-2 font-bold'>
+									Allocation Beginning
 								</FormLabel>
 								<FormControl>
 									<input type='datetime-local' className='w-full' {...field} />
