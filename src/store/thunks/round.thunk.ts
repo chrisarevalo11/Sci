@@ -1,6 +1,5 @@
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { Round } from '@/models/round.model'
-import { convertTimestampToDate } from '@/utils'
 import { ERROR_MESSAGE } from '@/utils/variables/constants'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
