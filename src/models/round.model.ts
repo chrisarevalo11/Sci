@@ -21,3 +21,8 @@ export interface Round {
 	reviewThreshold: number
 	totalPool: number
 }
+
+export interface RoundMetadata {
+	banner: string
+	name: string
+}

@@ -3,7 +3,7 @@ import { AddressLike, BytesLike, ethers, MaxUint256 } from 'ethers'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
-import { z } from 'zod'
+import { number, z } from 'zod'
 
 import {
 	Form,
@@ -15,10 +15,11 @@ import {
 } from '@/components/ui/form'
 import { getFrontendSigner } from '@/helpers'
 import { getContracts } from '@/helpers/contracts'
+import { storeObject } from '@/helpers/pinata'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { InitializeData } from '@/models/initialize-data.model'
 import { Metadata } from '@/models/metadata.model'
-import { Round } from '@/models/round.model'
+import { Round, RoundMetadata } from '@/models/round.model'
 import { AppDispatch } from '@/store'
 import { setRound, setRoundFetched } from '@/store/slides/roundslice'
 import { setLoading } from '@/store/slides/uiSlice'
@@ -83,49 +84,36 @@ export default function NewRoundForm(props: Props): JSX.Element {
 	const onCreatePoolWithCustomStrategy = async (
 		values: z.infer<typeof formSchema>
 	) => {
-		console.log(values)
-
 		try {
 			dispatch(setRoundFetched(false))
 			const web3Signer: ethers.JsonRpcSigner = await getFrontendSigner()
 
-			// const name: string = values.name
-			// const bannerBase64: string = banner as string
-			// const fundingAmount: number = Number(values.amount)
-			// const registrationDeadline: number = toTimestamp(
-			// 	values.registrationDeadline
-			// )
-			// const allocationDeadline: number = toTimestamp(values.allocationDeadline)
-
 			const profileId: BytesLike = ALLO_PROFILE_ID
 			const roundAddress: AddressLike = ROUND_ADDRESS
 
+			const registrationStartTime: number = toTimestamp(
+				values.registrationBegin
+			)
+			const registrationEndTime: number = toTimestamp(
+				values.registrationDeadline
+			)
+			const allocationStartTime: number = toTimestamp(values.allocationBegin)
+			const allocationEndTime: number = toTimestamp(values.allocationDeadline)
+
 			const nowTime: Date = new Date()
 
-			const reviewThresholdTimestamp: number = toTimestamp(
+			const reviewThreshold: number = toTimestamp(
 				addMinutesToDate(nowTime, 0).toISOString()
-			)
-			const registrationStartTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 2).toISOString()
-			)
-			const registrationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 3).toISOString()
-			)
-			const allocationStartTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 6).toISOString()
-			)
-			const allocationEndTimestamp: number = toTimestamp(
-				addMinutesToDate(nowTime, 9).toISOString()
 			)
 
 			const roundInitStrategyDataObject: InitializeData = {
 				registryGating: false,
 				metadataRequired: true,
-				reviewThreshold: reviewThresholdTimestamp,
-				registrationStartTime: registrationStartTimestamp,
-				registrationEndTime: registrationEndTimestamp,
-				allocationStartTime: allocationStartTimestamp,
-				allocationEndTime: allocationEndTimestamp
+				reviewThreshold,
+				registrationStartTime,
+				registrationEndTime,
+				allocationStartTime,
+				allocationEndTime
 			}
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -149,12 +137,20 @@ export default function NewRoundForm(props: Props): JSX.Element {
 
 			const daiMockContractAddress: AddressLike = await daiMock.getAddress()
 
-			const poolFundingAmount: bigint = toDecimal(1000)
+			let poolFundingAmount: bigint | number | string = values.amount
+			poolFundingAmount = Number(poolFundingAmount)
+			poolFundingAmount = toDecimal(poolFundingAmount)
 
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const roundMetadata: RoundMetadata = {
+				name: values.name,
+				banner: banner as string
+			}
+
+			// const ipfsUrl: string = await storeObject(roundMetadata)
+
 			const metadata: Metadata = {
 				protocol: BigInt(1),
-				pointer: 'https://ipfs.io/ipfs/QmX8z3Z'
+				pointer: 'ipfs://QmX3'
 			}
 
 			const poolManagersAddresses: AddressLike[] = []
@@ -192,11 +188,10 @@ export default function NewRoundForm(props: Props): JSX.Element {
 				donations: 0,
 				donators: [],
 				id,
-				image:
-					'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fep01.epimg.net%2Fcultura%2Fimagenes%2F2016%2F09%2F09%2Fbabelia%2F1473420066_993651_1473430939_noticia_normal.jpg&f=1&nofb=1&ipt=65fb6ff7f54bb2df9ed64412dac43ca6f3c9a1921e591cc4eb66e84165793eac&ipo=images',
-				machingPool: 1000,
+				image: roundMetadata.banner,
+				machingPool: Number(values.amount),
 				metadataRequired: roundInitStrategyDataObject.metadataRequired,
-				name: 'round: Ecology for Everyone',
+				name: roundMetadata.name,
 				poolId: poolIdNumber,
 				profileId,
 				projects: [],
@@ -205,7 +200,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 					roundInitStrategyDataObject.registrationStartTime,
 				registryGating: roundInitStrategyDataObject.registryGating,
 				reviewThreshold: roundInitStrategyDataObject.reviewThreshold,
-				totalPool: 1000
+				totalPool: Number(values.amount)
 			}
 
 			await addRound(round)

@@ -1,7 +1,7 @@
 // Addresses
 export const ALLO_CONTRACT_ADDRESS =
 	'0x9d0757C6cF366De37aB87128DD82e865F64f766C'
-export const ROUND_ADDRESS = '0x67faEc979580c37A306410dbc42F01f09460a867'
+export const ROUND_ADDRESS = '0xa2346265d04349320c52029Da43BB7c9Fa1Dd440'
 export const SCI_ADMIN_ADDRESS = '0x7753E5f36f20B14fFb6b6a61319Eb66f63abdb0b'
 
 // Allo
@@ -26,6 +26,8 @@ export const RECIPIENT_DATA_STRUCT_TYPES: string[] = [
 
 // URLs
 export const BSC_SCAN_URL = 'https://testnet.bscscan.com'
+export const IPFS_GATEWAY =
+	'https://crimson-written-woodpecker-490.mypinata.cloud/ipfs'
 
 // Others
 export const FIREBASE_COLLECTION_PROFILES = 'profiles'
