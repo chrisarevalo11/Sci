@@ -43,7 +43,7 @@ export default function Sidebar(): JSX.Element {
 		getStates()
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [lastRoundFetched])
+	}, [lastRoundFetched, lastRound])
 
 	return (
 		<>
@@ -98,24 +98,32 @@ export default function Sidebar(): JSX.Element {
 						{Date.now() < registrationStartTime.getTime() && (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
-									<span>Waiting</span> <span>start round</span>
+									<span>Next</span> <span>Round</span>
 								</h5>
-								<Countdown targetDate={allocationStartTime} />
+								<Countdown targetDate={registrationStartTime} />
 							</div>
 						)}
 						{Date.now() > registrationStartTime.getTime() &&
 						Date.now() < registrationEndTime.getTime() ? (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
-									<span>Registra...</span> <span>time</span>
+									<span>Registry</span> <span>time</span>
 								</h5>
 								<Countdown targetDate={registrationEndTime} />
+							</div>
+						) : Date.now() > registrationEndTime.getTime() &&
+						  Date.now() < allocationStartTime.getTime() ? (
+							<div className='flex items-center justify-between px-2 gap-4'>
+								<h5 className='flex flex-col text-left'>
+									<span>Voting</span> <span>starts</span>
+								</h5>
+								<Countdown targetDate={allocationEndTime} />
 							</div>
 						) : Date.now() > allocationStartTime.getTime() &&
 						  Date.now() < allocationEndTime.getTime() ? (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>
-									<span>Votin...</span> <span>time</span>
+									<span>Voting</span> <span>time</span>
 								</h5>
 								<Countdown targetDate={allocationEndTime} />
 							</div>
