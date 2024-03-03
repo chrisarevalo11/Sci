@@ -10,7 +10,6 @@ import DonateModal from '@/components/projects/DonateModal'
 import Clipboard from '@/components/ui/Clipboard'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getContracts } from '@/helpers/contracts'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
 import { AppDispatch, useAppSelector } from '@/store'
@@ -30,40 +29,18 @@ export default function ProjectComponent(): JSX.Element {
 	const [allocationStartTime, setAllocationStartTime] = useState<Date>(
 		new Date()
 	)
-	const [registrationStartTime, setRegistrationStartTime] = useState<Date>(
-		new Date()
-	)
-	const [registrationEndTime, setRegistrationEndTime] = useState<Date>(
-		new Date()
-	)
 
 	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
 
 	const getStates = async () => {
+		if (!recipientId) return
+
 		setAllocationEndTime(
 			new Date(convertTimestampToDate(round.allocationEndTime))
 		)
 		setAllocationStartTime(
 			new Date(convertTimestampToDate(round.allocationStartTime))
 		)
-		setRegistrationEndTime(
-			new Date(convertTimestampToDate(round.registrationEndTime))
-		)
-		setRegistrationStartTime(
-			new Date(convertTimestampToDate(round.registrationStartTime))
-		)
-
-		const { qVSimpleStrategy } = getContracts()
-
-		if (!recipientId) {
-			return
-		}
-
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const recipientContract: any = await qVSimpleStrategy(
-			round.address
-		).getRecipient(recipientId)
-		console.table(recipientContract)
 	}
 
 	useEffect(() => {

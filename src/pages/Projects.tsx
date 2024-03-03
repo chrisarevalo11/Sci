@@ -36,26 +36,18 @@ export default function Projects(): JSX.Element {
 	)
 
 	const lastRound: Round = useAppSelector(state => state.round.lastRound)
-	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
+
+	const lastRoundFetched: boolean = useAppSelector(
+		state => state.round.lastRoundFetched
+	)
 	const rounds: Round[] = useAppSelector(state => state.round.rounds)
-	const roundsFetched = useAppSelector(state => state.round.roundsFetched)
+
+	const roundsFetched: boolean = useAppSelector(
+		state => state.round.roundsFetched
+	)
 
 	const projects: Project[] = lastRound.projects
 
-	const getStates = async () => {
-		setRegistrationStartTime(
-			new Date(convertTimestampToDate(lastRound.registrationStartTime))
-		)
-		setRegistrationEndTime(
-			new Date(convertTimestampToDate(lastRound.registrationEndTime))
-		)
-
-		setAllocationEndTime(
-			new Date(convertTimestampToDate(lastRound.allocationEndTime))
-		)
-	}
-
-	// TODO: function isn't work
 	const changeRound = async (id: number) => {
 		const roundSelected: Round | undefined = rounds.find(
 			round => round.id === id
@@ -66,8 +58,21 @@ export default function Projects(): JSX.Element {
 		}
 	}
 
+	const getStates = async () => {
+		setAllocationEndTime(
+			new Date(convertTimestampToDate(lastRound.allocationEndTime))
+		)
+		setRegistrationEndTime(
+			new Date(convertTimestampToDate(lastRound.registrationEndTime))
+		)
+		setRegistrationStartTime(
+			new Date(convertTimestampToDate(lastRound.registrationStartTime))
+		)
+	}
+
 	useEffect(() => {
 		getStates()
+
 		if (!lastRoundFetched) {
 			dispatch(getLastRound())
 		}
@@ -126,14 +131,10 @@ export default function Projects(): JSX.Element {
 						) &&
 							new Date() > registrationStartTime &&
 							new Date() < registrationEndTime &&
-							address !== SCI_ADMIN_ADDRESS && <CreateCard />}
+							address !== SCI_ADMIN_ADDRESS && <CreateCard round={lastRound} />}
 						{lastRoundFetched &&
-							projects?.map((project: Project) => (
-								<ProjectCard
-									project={project}
-									round={lastRound}
-									key={project.name}
-								/>
+							projects?.map((project: Project, index: number) => (
+								<ProjectCard key={index} project={project} round={lastRound} />
 							))}
 					</>
 				) : (

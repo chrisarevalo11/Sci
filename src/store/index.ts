@@ -4,10 +4,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import { erc20DetailsSlice } from './slides/erc20Details.slice'
 import { roundSlice } from './slides/roundslice'
+import { uiSlice } from './slides/uiSlice'
 
 const rootReducer = combineReducers({
 	erc20Details: erc20DetailsSlice.reducer,
-	round: roundSlice.reducer
+	round: roundSlice.reducer,
+	ui: uiSlice.reducer
 })
 
 export const store = configureStore({

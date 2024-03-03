@@ -10,10 +10,10 @@ import { SCI_ADMIN_ADDRESS } from '@/utils/variables/constants'
 
 export default function Dashboard(): JSX.Element {
 	const { address } = useAccount()
-
 	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
 
+	const isLoading: boolean = useAppSelector(state => state.ui.isLoading)
 	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
 
 	useEffect(() => {
@@ -34,7 +34,7 @@ export default function Dashboard(): JSX.Element {
 				<h2>Dashboard</h2>
 			</header>
 			<div className='mt-10 flex flex-col justify-center items-center'>
-				<NewRoundForm lastRoundFetched={lastRoundFetched} />
+				<NewRoundForm dispatch={dispatch} isLoading={isLoading} />
 			</div>
 			<img
 				src='/images/slime-no-bg.webp'

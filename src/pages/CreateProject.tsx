@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import CreateProjectForm from '@/components/create/CreateProjectForm'
@@ -11,18 +11,22 @@ import { SCI_ADMIN_ADDRESS } from '@/utils/variables/constants'
 
 export default function CreateProject(): JSX.Element {
 	const { address } = useAccount()
-
 	const dispatch = useDispatch<AppDispatch>()
+	const location = useLocation()
 	const navigate = useNavigate()
 
-	const lastRound: Round = useAppSelector(state => state.round.lastRound)
+	const round: Round | null =
+		location.state && 'round' in location.state ? location.state.round : null
+
+	const isLoading: boolean = useAppSelector(state => state.ui.isLoading)
 	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
 
 	useEffect(() => {
 		if (
 			!address ||
 			address === SCI_ADMIN_ADDRESS ||
-			lastRound?.projects.some(project => project.recipientId === address)
+			!round ||
+			round?.projects?.some(project => project.recipientId === address)
 		) {
 			navigate('/app/projects')
 			return
@@ -40,7 +44,12 @@ export default function CreateProject(): JSX.Element {
 				<h2>Create Project</h2>
 			</header>
 
-			<CreateProjectForm />
+			<CreateProjectForm
+				address={address as string}
+				dispatch={dispatch}
+				isLoading={isLoading}
+				navigate={navigate}
+			/>
 
 			<img
 				src='/images/slime-no-bg.webp'

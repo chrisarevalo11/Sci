@@ -94,7 +94,6 @@ export default function Sidebar(): JSX.Element {
 								<StatCard title='Round completed' stat={''} />
 							</section>
 						)}
-						{/* TODO: Fix Countdown */}
 						{Date.now() < registrationStartTime.getTime() && (
 							<div className='flex items-center justify-between px-2 gap-4'>
 								<h5 className='flex flex-col text-left'>

@@ -5,7 +5,7 @@ import { Round } from '@/models/round.model'
 
 type Props = {
 	project: Project
-	round: Round | null
+	round: Round
 }
 
 export default function ProjectCard(props: Props): JSX.Element {
@@ -29,8 +29,8 @@ export default function ProjectCard(props: Props): JSX.Element {
 				<p className='line-clamp-3 min-h-[72px]'>{project.description}</p>
 				<Link
 					className='btn mx-auto btn-green'
-					to={`/app/projects/${project.recipientId}`}
 					state={{ round, project }}
+					to={`/app/projects/${project.recipientId}`}
 				>
 					See more
 				</Link>

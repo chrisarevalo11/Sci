@@ -9,6 +9,7 @@ import {
 	setRounds,
 	setRoundsFetched
 } from '../slides/roundslice'
+import { setIsLoading } from '../slides/uiSlice'
 
 export const createRound = createAsyncThunk(
 	'round/createRound',
@@ -27,12 +28,14 @@ export const getLastRound = createAsyncThunk(
 	'round/getLastRound',
 	async (_, { dispatch }) => {
 		try {
+			dispatch(setIsLoading(true))
 			const { getLastRound } = roundsApiFirebase()
 
 			const lastRound: Round = await getLastRound()
 
 			dispatch(setRound(lastRound))
 			dispatch(setRoundFetched(true))
+			dispatch(setIsLoading(false))
 		} catch (error) {
 			console.error('❌ ', error)
 			alert(ERROR_MESSAGE)
