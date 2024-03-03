@@ -1,16 +1,16 @@
 # Sci Protocol - frontend
 
-BNB Chain Hackathon 2024
+BNBChain Hackathon: Building Smart and Fully-On-Chain Applications
 
 ### Fleek deploy
 
-xxx
+https://sci.on.fleek.co
 
-### Cuadratic Sciencie - contracts:
+### Sci protocol - contracts:
 
-xxx
+https://github.com/salviega/sci-contracts
 
-### Cuadratic Sciencie - backend:
+### Sci protocol - backend:
 
 xxx
 
