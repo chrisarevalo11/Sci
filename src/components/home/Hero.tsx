@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import Container from '@/components/ui/Container'
 
 export default function Hero(): JSX.Element {
@@ -6,16 +8,19 @@ export default function Hero(): JSX.Element {
 			<Container className='h-full max-h-svh grid md:grid-cols-3 md:items-center gap-2 md:gap-5'>
 				<div className='flex flex-col gap-10 h-[70%] justify-between mt-20 md:mt-10'>
 					<header className='flex flex-col items-start gap-3 md:gap-7'>
-						<h3>crowdfunding</h3>
+						<h3>Cuadratic</h3>
 						<p className='md:pr-5'>
-							Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab
-							inventore quis reprehenderit deleniti cumque sequi itaque
-							consequuntur, amet eligendi, quas voluptates modi aliquid animi
-							quisquam impedit quidem, iste eum ea?
+							Quadratic Voting is an innovative voting method that allows
+							participants to express not just their preferences but the
+							intensity of those preferences. Unlike traditional methods where
+							one vote is allocated per issue, here, voters use credits to vote.
+							However, the cost of assigning multiple votes to an option
+							increases quadratically, meaning expressing a strong preference
+							for one option comes at a higher price.
 						</p>
-						<a href='#' className='btn btn-black'>
+						<Link to='/app/projects' className='btn btn-black'>
 							See more
-						</a>
+						</Link>
 					</header>
 					<img
 						src='/images/grid1.png'
@@ -35,12 +40,14 @@ export default function Hero(): JSX.Element {
 						className='hidden md:block w-[300px]'
 					/>
 					<header className='flex flex-col items-end gap-7'>
-						<h3 className='text-right'>science</h3>
+						<h3 className='text-right'>Voting</h3>
 						<p className='md:pl-5 text-right'>
-							Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab
-							inventore quis reprehenderit deleniti cumque sequi itaque
-							consequuntur, amet eligendi, quas voluptates modi aliquid animi
-							quisquam impedit quidem, iste eum ea?
+							This system promotes a more thoughtful and equitable distribution
+							of votes, allowing minority voices to significantly influence the
+							outcome. It encourages a more representative and balanced
+							decision-making process in communities and organizations, ensuring
+							that decisions better reflect the values and priorities of the
+							entire group.
 						</p>
 					</header>
 				</div>

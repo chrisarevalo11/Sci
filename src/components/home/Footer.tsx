@@ -14,7 +14,7 @@ export default function Footer(): JSX.Element {
 				</div>
 				<div className='flex gap-3'>
 					<a
-						href='https://github.com/salviega/cuadratic-sciencie-bnb-frontend'
+						href='https://github.com/chrisarevalo11/Sci-frontend'
 						target='_blank'
 						rel='noopener noreferrer'
 					>

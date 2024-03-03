@@ -4,11 +4,11 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { useAccount } from 'wagmi'
 
-import Home from '@/components/home/Home'
 import Layout from '@/components/layout/Layout'
 import CreateProject from '@/pages/CreateProject'
 import Dashboard from '@/pages/Dashboard'
 import Faucet from '@/pages/Faucet'
+import Home from '@/pages/Home'
 import Projects from '@/pages/Projects'
 import { AppDispatch } from '@/store'
 

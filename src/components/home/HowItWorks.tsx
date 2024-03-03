@@ -16,33 +16,32 @@ export default function HowItWorks(): JSX.Element {
 		>
 			<Container className='py-[4rem] md:py-[8rem] grid justify-items-center gap-20'>
 				<header className='text-center show'>
-					<p className='text-customGray'>How it works</p>
 					<h2 className='text-customWhite'>This is how it works</h2>
 				</header>
 				<div className='grid md:grid-cols-3 gap-3'>
 					<StepCard
 						className='md:col-span-2 show'
-						title='Step 1'
+						title='STEP 1: Remember to Visit the Faucet'
 						step={1}
-						description='Buy a token Buy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a token v Buy a token Buy a token Buy a token Buy a token Buy a token Buy a tokenBuy a tokenBuy a token'
+						description='Head to our Faucet to receive voting credits. Think of these as currency to support the options or projects you prefer. Manage your credits wisely, as they are limited.'
 					/>
 					<StepCard
 						className='md:row-span-2 show'
-						title='Step 2'
+						title='STEP 2: Register Your Project'
 						step={2}
-						description='Buy a token Buy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a token v Buy a token Buy a token Buy a token Buy a token Buy a token Buy a tokenBuy a tokenBuy a token'
+						description='If you have a project that needs funding, register it. Make sure to detail your proposal so that voters understand and support your initiative.'
 					/>
 					<StepCard
 						className='md:row-span-2 show'
-						title='Step 3'
+						title='STEP 3: Donate and Vote'
 						step={3}
-						description='Buy a token Buy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a token v Buy a token Buy a token Buy a token Buy a token Buy a token Buy a tokenBuy a tokenBuy a token'
+						description='Use your credits to donate and vote for the projects that interest you the most. Remember, casting multiple votes for the same project has a quadratic cost, so distribute your credits strategically.'
 					/>
 					<StepCard
 						className='md:row-start-3 md:col-start-2 md:col-span-2 show'
-						title='Step 4'
+						title='STEP 4: Await the Results'
 						step={4}
-						description='Buy a token Buy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a tokenBuy a token v Buy a token Buy a token Buy a token Buy a token Buy a token Buy a tokenBuy a tokenBuy a token'
+						description='After the voting round concludes, the administrator will tally and distribute funds according to the votes each project has received. Your participation makes a difference!'
 					/>
 				</div>
 				<Link to={'/app/projects'} className='btn btn-white'>
