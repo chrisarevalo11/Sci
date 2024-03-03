@@ -32,7 +32,9 @@ export function getContracts(): Contracts {
 		provider
 	)
 
-	const qVSimpleStrategy: QVSimpleStrategy = (address: string) => {
+	const qVSimpleStrategy: (address: string) => QVSimpleStrategy = (
+		address: string
+	) => {
 		// eslint-disable-next-line camelcase
 		return QVSimpleStrategy__factory.connect(address, provider)
 	}
