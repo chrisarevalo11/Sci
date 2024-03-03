@@ -195,6 +195,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 			form.reset()
 		} catch (error) {
 			console.error(error)
+			dispatch(setRoundFetched(true))
 			dispatch(setIsLoading(false))
 			toast.error(ERROR_MESSAGE)
 		}

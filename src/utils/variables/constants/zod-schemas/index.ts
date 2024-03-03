@@ -1,5 +1,9 @@
 import { z } from 'zod'
 
+export const donateFormSchema = z.object({
+	amount: z.string().min(1, { message: 'Amount is required' })
+})
+
 export const createRoundFormSchema = z.object({
 	name: z.string().min(1, { message: 'Name is required' }),
 	banner: z.string().min(1, { message: 'Banner is required' }),

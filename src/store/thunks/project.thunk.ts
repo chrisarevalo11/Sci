@@ -71,10 +71,10 @@ export const createProject = createAsyncThunk(
 				recipientDataArray
 			)
 
-			// const registerRecipientTx = await allo
-			// 	.connect(web3Signer)
-			// 	.registerRecipient(round.poolId, recipientData, { gasLimit: GAS_LIMIT })
-			// await registerRecipientTx.wait()
+			const registerRecipientTx = await allo
+				.connect(web3Signer)
+				.registerRecipient(round.poolId, recipientData, { gasLimit: GAS_LIMIT })
+			await registerRecipientTx.wait()
 
 			const updatedProjects = [...round.projects, project]
 			const updatedRound: Round = { ...round, projects: updatedProjects }
