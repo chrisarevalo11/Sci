@@ -2,7 +2,6 @@ import { BytesLike, ethers } from 'ethers'
 
 import contractsJson from '@/assets/json/deployments/bsctestnet/deployments.json'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
-import { Round } from '@/models/round.model'
 import { GAS_LIMIT } from '@/utils/variables/constants'
 
 import { getContracts } from '../contracts'
@@ -32,7 +31,7 @@ export function getRpcProvider(): ethers.JsonRpcProvider {
 
 export async function createQvSimpleStrategyContract(): Promise<string> {
 	try {
-		const { addRound, getRoundsLength } = roundsApiFirebase()
+		const { getRoundsLength } = roundsApiFirebase()
 		const privateKey: string = getPrivateKey()
 		const rpcUrl: string = getRpcUrl()
 
@@ -46,7 +45,6 @@ export async function createQvSimpleStrategyContract(): Promise<string> {
 
 		const roundsLegth: number = await getRoundsLength()
 		const id: number = roundsLegth + 1
-		const idString: string = id.toString()
 
 		const args: string[] = [
 			contractsJson.alloInstance.address,
