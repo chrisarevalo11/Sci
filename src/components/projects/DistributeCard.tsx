@@ -67,8 +67,8 @@ export default function DistributeCard(props: Props): JSX.Element {
 		<div className='rounded-tl-3xl rounded-br-3xl w-full max-w-[290px] h-full min-h-[300px] max-h-[300px] flex items-center p-4 text-center justify-between flex-col border-2 border-customBlack'>
 			<h3>Distribute funds</h3>
 			<p>
-				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos
-				repellendus corrupti distinctio sint
+				Finalize Impact: Allocate the pooled funds to projects as determined by
+				community preference.
 			</p>
 			<button
 				onClick={() => onDistribute()}

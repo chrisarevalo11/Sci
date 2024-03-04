@@ -10,11 +10,13 @@ import DonateModal from '@/components/projects/DonateModal'
 import Clipboard from '@/components/ui/Clipboard'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getContracts } from '@/helpers/contracts'
 import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
 import { AppDispatch, useAppSelector } from '@/store'
 import { getLastRound } from '@/store/thunks/round.thunk'
 import { convertTimestampToDate, formatAddress } from '@/utils'
+import { ROUND_ADDRESS } from '@/utils/variables/constants'
 
 export default function ProjectComponent(): JSX.Element {
 	const { address } = useAccount()
@@ -32,6 +34,8 @@ export default function ProjectComponent(): JSX.Element {
 
 	const lastRoundFetched = useAppSelector(state => state.round.lastRoundFetched)
 
+	const { qVSimpleStrategy } = getContracts()
+
 	const getStates = async () => {
 		if (!recipientId) return
 
@@ -41,6 +45,12 @@ export default function ProjectComponent(): JSX.Element {
 		setAllocationStartTime(
 			new Date(convertTimestampToDate(round.allocationStartTime))
 		)
+
+		const recipientData: any[] = await qVSimpleStrategy(
+			ROUND_ADDRESS
+		).getRecipient(project.recipientId)
+
+		console.table(recipientData)
 	}
 
 	useEffect(() => {

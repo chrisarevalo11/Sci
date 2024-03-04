@@ -124,6 +124,7 @@ export default function Donation(props: Props): JSX.Element {
 					important because you will allocate voting tokens to this project that
 					will actually help the project.
 				</DialogDescription>
+				<br />
 			</DialogHeader>
 			<Form {...form}>
 				<form
@@ -135,7 +136,9 @@ export default function Donation(props: Props): JSX.Element {
 						name='amount'
 						render={({ field }) => (
 							<FormItem className='flex flex-col items-start w-full'>
-								<FormLabel className='mr-2 font-bold'>Funding amount</FormLabel>
+								<FormLabel className='mr-2 font-bold'>
+									Donation amount
+								</FormLabel>
 								<FormControl>
 									<input
 										{...field}
