@@ -12,7 +12,7 @@ https://github.com/salviega/sci-contracts
 
 ### Sci protocol - backend:
 
-xxx
+https://github.com/salviega/sci-backend
 
 ## Quick start 🏄
 
