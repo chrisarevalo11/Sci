@@ -3,10 +3,8 @@ import { useDispatch } from 'react-redux'
 import { useLocation, useParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import Github from '@/components/icons/Github'
-import Globe from '@/components/icons/Globe'
-import Twitter from '@/components/icons/Twitter'
 import DonateModal from '@/components/projects/DonateModal'
+import MediaLinks from '@/components/projects/MediaLinks'
 import Clipboard from '@/components/ui/Clipboard'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -86,37 +84,31 @@ export default function ProjectComponent(): JSX.Element {
 								<h5 className='text-customGray'>{project.slogan}</h5>
 							</header>
 							<div className='lg:hidden flex flex-col'>
-								<button className='btn btn-green text-lg px-20'>Donate</button>
-								<div className='mt-6 flex gap-3 justify-center flex-col items-start'>
-									<h5>Media</h5>
-									<a
-										href={project.website}
-										target='_blank'
-										rel='noreferrer'
-										className='flex gap-2'
-									>
-										<Globe className='size-5' />
-										{project.website}
-									</a>
-									<a
-										href={project.twitter}
-										target='_blank'
-										rel='noreferrer'
-										className='flex gap-2'
-									>
-										<Twitter className='size-5' />
-										{project.twitter}
-									</a>
-									<a
-										href={project.github}
-										target='_blank'
-										rel='noreferrer'
-										className='flex gap-2'
-									>
-										<Github className='size-5' />
-										{project.github}
-									</a>
-								</div>
+								{round.distributed && (
+									<header>
+										<h4 className=''>Distributed:</h4>
+										<h5>1000 DAI 💸</h5>
+									</header>
+								)}
+								{!round.distributed &&
+									Date.now() > allocationEndTime.getTime() && (
+										<p className='font-bold p-1 text-center rounded-xl bg-customGreen/70 text-white'>
+											Waiting distribution
+										</p>
+									)}
+								{recipientId !== address &&
+									Date.now() > allocationStartTime.getTime() &&
+									Date.now() < allocationEndTime.getTime() && (
+										<Dialog>
+											<DialogTrigger>
+												<button className='btn btn-green text-lg md:px-16'>
+													Donate
+												</button>
+											</DialogTrigger>
+											<DonateModal round={round} project={project} />
+										</Dialog>
+									)}
+								<MediaLinks project={project} />
 							</div>
 							<div>
 								<h5>About the project</h5>
@@ -174,36 +166,7 @@ export default function ProjectComponent(): JSX.Element {
 									</Dialog>
 								)}
 
-							<div className='mt-6 flex gap-3 justify-center flex-col items-start'>
-								<h5>Media</h5>
-								<a
-									href={project.website}
-									target='_blank'
-									rel='noreferrer'
-									className='flex gap-2'
-								>
-									<Globe className='size-5' />
-									{project.website}
-								</a>
-								<a
-									href={project.twitter}
-									target='_blank'
-									rel='noreferrer'
-									className='flex gap-2'
-								>
-									<Twitter className='size-5' />
-									{project.twitter}
-								</a>
-								<a
-									href={project.github}
-									target='_blank'
-									rel='noreferrer'
-									className='flex gap-2'
-								>
-									<Github className='size-5' />
-									{project.github}
-								</a>
-							</div>
+							<MediaLinks project={project} />
 						</div>
 					</div>
 				</>
