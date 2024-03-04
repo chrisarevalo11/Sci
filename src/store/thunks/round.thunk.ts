@@ -53,6 +53,7 @@ export const getLastRound = createAsyncThunk(
 
 			dispatch(setRound(lastRound))
 			dispatch(setRoundFetched(true))
+			dispatch(setIsLoading(false))
 		} catch (error) {
 			console.error('❌ ', error)
 			alert(ERROR_MESSAGE)
