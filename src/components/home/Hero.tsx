@@ -8,15 +8,12 @@ export default function Hero(): JSX.Element {
 			<Container className='h-full max-h-svh grid md:grid-cols-3 md:items-center gap-2 md:gap-5'>
 				<div className='flex flex-col gap-10 h-[70%] justify-between mt-20 md:mt-10'>
 					<header className='flex flex-col items-start gap-3 md:gap-7'>
-						<h3>Cuadratic</h3>
+						<h3>Quadratic</h3>
 						<p className='md:pr-5'>
-							Quadratic Voting is an innovative voting method that allows
-							participants to express not just their preferences but the
-							intensity of those preferences. Unlike traditional methods where
-							one vote is allocated per issue, here, voters use credits to vote.
-							However, the cost of assigning multiple votes to an option
-							increases quadratically, meaning expressing a strong preference
-							for one option comes at a higher price.
+							Quadratic Voting is a novel method where participants express
+							preferences and intensity. Unlike traditional methods, voters use
+							credits to vote. However, assigning multiple votes increases
+							quadratically, making strong preferences costly.
 						</p>
 						<Link to='/app/projects' className='btn btn-black'>
 							See more
