@@ -50,6 +50,7 @@ export declare namespace QVBaseStrategy {
     metadata: MetadataStruct;
     recipientStatus: BigNumberish;
     applicationId: BigNumberish;
+    amountDistributed: BigNumberish;
   };
 
   export type RecipientStructOutput = [
@@ -58,7 +59,8 @@ export declare namespace QVBaseStrategy {
     recipientAddress: string,
     metadata: MetadataStructOutput,
     recipientStatus: bigint,
-    applicationId: bigint
+    applicationId: bigint,
+    amountDistributed: bigint
   ] & {
     totalVotesReceived: bigint;
     useRegistryAnchor: boolean;
@@ -66,6 +68,7 @@ export declare namespace QVBaseStrategy {
     metadata: MetadataStructOutput;
     recipientStatus: bigint;
     applicationId: bigint;
+    amountDistributed: bigint;
   };
 }
 
@@ -755,13 +758,22 @@ export interface QVSimpleStrategy extends BaseContract {
   recipients: TypedContractMethod<
     [arg0: AddressLike],
     [
-      [bigint, boolean, string, MetadataStructOutput, bigint, bigint] & {
+      [
+        bigint,
+        boolean,
+        string,
+        MetadataStructOutput,
+        bigint,
+        bigint,
+        bigint
+      ] & {
         totalVotesReceived: bigint;
         useRegistryAnchor: boolean;
         recipientAddress: string;
         metadata: MetadataStructOutput;
         recipientStatus: bigint;
         applicationId: bigint;
+        amountDistributed: bigint;
       }
     ],
     "view"
@@ -932,13 +944,22 @@ export interface QVSimpleStrategy extends BaseContract {
   ): TypedContractMethod<
     [arg0: AddressLike],
     [
-      [bigint, boolean, string, MetadataStructOutput, bigint, bigint] & {
+      [
+        bigint,
+        boolean,
+        string,
+        MetadataStructOutput,
+        bigint,
+        bigint,
+        bigint
+      ] & {
         totalVotesReceived: bigint;
         useRegistryAnchor: boolean;
         recipientAddress: string;
         metadata: MetadataStructOutput;
         recipientStatus: bigint;
         applicationId: bigint;
+        amountDistributed: bigint;
       }
     ],
     "view"

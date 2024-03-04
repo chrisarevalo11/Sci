@@ -674,6 +674,11 @@ const _abi = [
             name: "applicationId",
             type: "uint256",
           },
+          {
+            internalType: "uint256",
+            name: "amountDistributed",
+            type: "uint256",
+          },
         ],
         internalType: "struct QVBaseStrategy.Recipient",
         name: "",
@@ -860,6 +865,11 @@ const _abi = [
       {
         internalType: "uint256",
         name: "applicationId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amountDistributed",
         type: "uint256",
       },
     ],

@@ -1,6 +1,9 @@
+import { getContracts } from '@/helpers/contracts'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
+import { Project } from '@/models/project.model'
 import { Round } from '@/models/round.model'
-import { ERROR_MESSAGE } from '@/utils/variables/constants'
+import { toNumber } from '@/utils'
+import { ERROR_MESSAGE, ROUND_ADDRESS } from '@/utils/variables/constants'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
 import {
@@ -28,14 +31,28 @@ export const getLastRound = createAsyncThunk(
 	'round/getLastRound',
 	async (_, { dispatch }) => {
 		try {
-			dispatch(setIsLoading(true))
+			const { qVSimpleStrategy } = getContracts()
 			const { getLastRound } = roundsApiFirebase()
 
+			dispatch(setIsLoading(true))
 			const lastRound: Round = await getLastRound()
+
+			if (lastRound.distributed) {
+				const updatedProjects = await Promise.all(
+					lastRound.projects.map(async (project: Project) => {
+						const recipientData = await qVSimpleStrategy(
+							ROUND_ADDRESS
+						).getRecipient(project?.recipientId)
+						const amountDistributed = toNumber(recipientData[6])
+						return { ...project, amountDistributed }
+					})
+				)
+
+				lastRound.projects = updatedProjects
+			}
 
 			dispatch(setRound(lastRound))
 			dispatch(setRoundFetched(true))
-			dispatch(setIsLoading(false))
 		} catch (error) {
 			console.error('❌ ', error)
 			alert(ERROR_MESSAGE)
@@ -76,7 +93,7 @@ export const getRounds = createAsyncThunk(
 		} catch (error) {
 			console.error('❌ ', error)
 			alert(ERROR_MESSAGE)
-			dispatch(setRoundFetched(true))
+			dispatch(setRoundsFetched(true))
 		}
 	}
 )

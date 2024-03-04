@@ -1,4 +1,5 @@
 export interface Project {
+	amountDistributed: number
 	banner: string
 	description: string
 	github: string

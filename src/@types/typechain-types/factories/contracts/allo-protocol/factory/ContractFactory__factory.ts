@@ -3,7 +3,7 @@
 /* eslint-disable */
 import {
 	Contract,
-	ContractFactory as EthersContractFactory,
+	ContractFactory as ContractFactoryEthers,
 	ContractTransactionResponse,
 	Interface
 } from 'ethers'
@@ -141,13 +141,13 @@ const _bytecode =
 
 type ContractFactoryConstructorParams =
 	| [signer?: Signer]
-	| ConstructorParameters<typeof EthersContractFactory>
+	| ConstructorParameters<typeof ContractFactoryEthers>
 
 const isSuperArgs = (
 	xs: ContractFactoryConstructorParams
-): xs is ConstructorParameters<typeof EthersContractFactory> => xs.length > 1
+): xs is ConstructorParameters<typeof ContractFactoryEthers> => xs.length > 1
 
-export class ContractFactory__factory extends EthersContractFactory {
+export class ContractFactory__factory extends ContractFactoryEthers {
 	constructor(...args: ContractFactoryConstructorParams) {
 		if (isSuperArgs(args)) {
 			super(...args)

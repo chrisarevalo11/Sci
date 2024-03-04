@@ -53,6 +53,7 @@ export default function CreateProjectForm(props: Props): JSX.Element {
 		if (!address) return
 
 		const project: Project = {
+			amountDistributed: 0,
 			banner: banner as string,
 			description: values.description,
 			github: values.github,

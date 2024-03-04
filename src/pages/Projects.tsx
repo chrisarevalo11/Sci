@@ -119,19 +119,19 @@ export default function Projects(): JSX.Element {
 				<h2>Projects</h2>
 			</header>
 			<div className='grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 mt-10 justify-items-center'>
-				{roundsFetched ? (
+				{lastRoundFetched ? (
 					<>
-						{!lastRound.distributed &&
-							new Date() > allocationEndTime &&
-							address === SCI_ADMIN_ADDRESS && (
-								<DistributeCard projects={projects} round={lastRound} />
-							)}
 						{!lastRound.projects?.some(
 							projects => projects.recipientId === address
 						) &&
 							new Date() > registrationStartTime &&
 							new Date() < registrationEndTime &&
 							address !== SCI_ADMIN_ADDRESS && <CreateCard round={lastRound} />}
+						{!lastRound.distributed &&
+							new Date() > allocationEndTime &&
+							address === SCI_ADMIN_ADDRESS && (
+								<DistributeCard projects={projects} round={lastRound} />
+							)}
 						{lastRoundFetched &&
 							projects?.map((project: Project, index: number) => (
 								<ProjectCard key={index} project={project} round={lastRound} />
