@@ -28,7 +28,7 @@ export default function MintCard(props: Props): JSX.Element {
 			<div className='flex gap-4 items-center'>
 				<p>
 					<span className='font-dela mr-2'>Balance:</span>
-					{erc20Details.balance}
+					{Math.round(erc20Details.balance)}
 				</p>
 				<p>
 					<span className='font-dela mr-2'>Allowance: </span>
