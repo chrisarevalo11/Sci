@@ -8,7 +8,7 @@ function getAccessToken() {
 	return import.meta.env.VITE_PINATA_API
 }
 
-export async function storageFile(file: File): Promise<string> {
+export async function storeFile(file: File): Promise<string> {
 	try {
 		const formData = new FormData()
 		formData.append('file', file)

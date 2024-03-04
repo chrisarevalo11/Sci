@@ -13,9 +13,8 @@ import {
 } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 import { AppThunkDispatch } from '@/models/dispatch.model'
-import { Project } from '@/models/project.model'
+import { ProjectDto } from '@/models/project.model'
 import { createProject } from '@/store/thunks/project.thunk'
-import { convertFileToBase64 } from '@/utils'
 import { createProjectFormSchema } from '@/utils/variables/constants/zod-schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -29,8 +28,8 @@ type Props = {
 export default function CreateProjectForm(props: Props): JSX.Element {
 	const { address, dispatch, isLoading, navigate } = props
 
-	const [banner, setBanner] = useState<string | ArrayBuffer | null>('')
-	const [logo, setLogo] = useState<string | ArrayBuffer | null>('')
+	const [banner, setBanner] = useState<File | null>(null)
+	const [logo, setLogo] = useState<File | null>(null)
 
 	const form = useForm<z.infer<typeof createProjectFormSchema>>({
 		defaultValues: {
@@ -52,12 +51,12 @@ export default function CreateProjectForm(props: Props): JSX.Element {
 	) => {
 		if (!address) return
 
-		const project: Project = {
+		const projectDto: ProjectDto = {
 			amountDistributed: 0,
-			banner: banner as string,
+			banner: banner as File,
 			description: values.description,
 			github: values.github,
-			logo: logo as string,
+			logo: logo as File,
 			name: values.name,
 			recipientId: address as string,
 			slogan: values.slogan,
@@ -66,7 +65,9 @@ export default function CreateProjectForm(props: Props): JSX.Element {
 			website: values.website
 		}
 
-		dispatch(createProject({ address: address as string, navigate, project }))
+		dispatch(
+			createProject({ address: address as string, navigate, projectDto })
+		)
 	}
 
 	return (
@@ -147,7 +148,7 @@ export default function CreateProjectForm(props: Props): JSX.Element {
 										disabled={isLoading}
 										onChange={event => {
 											field.onChange(event)
-											convertFileToBase64(event, setBanner)
+											setBanner(event.target.files?.[0] || null)
 										}}
 										type='file'
 									/>
@@ -170,7 +171,7 @@ export default function CreateProjectForm(props: Props): JSX.Element {
 										disabled={isLoading}
 										onChange={event => {
 											field.onChange(event)
-											convertFileToBase64(event, setLogo)
+											setLogo(event.target.files?.[0] || null)
 										}}
 										type='file'
 									/>

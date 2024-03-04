@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form'
 import { getFrontendSigner } from '@/helpers'
 import { getContracts } from '@/helpers/contracts'
-import { storeObject } from '@/helpers/pinata'
+import { storeFile, storeObject } from '@/helpers/pinata'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
 import { AppThunkDispatch } from '@/models/dispatch.model'
 import { InitializeData } from '@/models/initialize-data.model'
@@ -22,12 +22,7 @@ import { Metadata } from '@/models/metadata.model'
 import { Round, RoundMetadata } from '@/models/round.model'
 import { setRound, setRoundFetched } from '@/store/slides/roundslice'
 import { setIsLoading } from '@/store/slides/uiSlice'
-import {
-	convertFileToBase64,
-	toAbiCoder,
-	toDecimal,
-	toTimestamp
-} from '@/utils'
+import { toAbiCoder, toDecimal, toTimestamp } from '@/utils'
 import {
 	ALLO_PROFILE_ID,
 	ERROR_MESSAGE,
@@ -46,7 +41,7 @@ type Props = {
 export default function NewRoundForm(props: Props): JSX.Element {
 	const { dispatch, isLoading } = props
 
-	const [banner, setBanner] = useState<string | ArrayBuffer | null>('')
+	const [banner, setBanner] = useState<File | null>(null)
 
 	const { allo, daiMock, qVSimpleStrategy } = getContracts()
 	const { addRound, getRoundsLength } = roundsApiFirebase()
@@ -125,16 +120,18 @@ export default function NewRoundForm(props: Props): JSX.Element {
 			poolFundingAmount = Number(poolFundingAmount)
 			poolFundingAmount = toDecimal(poolFundingAmount)
 
+			const bannerHash: string = await storeFile(banner as File)
+
 			const roundMetadata: RoundMetadata = {
 				name: values.name,
-				banner: banner as string
+				banner: bannerHash
 			}
 
-			// const ipfsUrl: string = await storeObject(roundMetadata)
+			const ipfsUrl: string = await storeObject(roundMetadata)
 
 			const metadata: Metadata = {
 				protocol: BigInt(1),
-				pointer: 'ipfs://QmX3'
+				pointer: ipfsUrl
 			}
 
 			const poolManagersAddresses: AddressLike[] = []
@@ -172,7 +169,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 				donations: 0,
 				donators: [],
 				id,
-				image: roundMetadata.banner,
+				image: bannerHash,
 				machingPool: Number(values.amount),
 				metadataRequired: roundInitStrategyDataObject.metadataRequired,
 				name: roundMetadata.name,
@@ -254,7 +251,7 @@ export default function NewRoundForm(props: Props): JSX.Element {
 										disabled={isLoading}
 										onChange={event => {
 											field.onChange(event)
-											convertFileToBase64(event, setBanner)
+											setBanner(event.target.files?.[0] || null)
 										}}
 										type='file'
 									/>

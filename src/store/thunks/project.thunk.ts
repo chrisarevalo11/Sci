@@ -4,9 +4,9 @@ import { toast } from 'react-toastify'
 
 import { getFrontendSigner } from '@/helpers'
 import { getContracts } from '@/helpers/contracts'
-import { storeObject } from '@/helpers/pinata'
+import { storeFile, storeObject } from '@/helpers/pinata'
 import { roundsApiFirebase } from '@/middlewares/firebase/round.firebase.middleware'
-import { Project } from '@/models/project.model'
+import { Project, ProjectDto } from '@/models/project.model'
 import { RecipientData } from '@/models/recipient-data.model'
 import { Round } from '@/models/round.model'
 import { toAbiCoder } from '@/utils'
@@ -27,11 +27,11 @@ export const createProject = createAsyncThunk(
 		{
 			address,
 			navigate,
-			project
+			projectDto
 		}: {
 			address: string
 			navigate: NavigateFunction
-			project: Project
+			projectDto: ProjectDto
 		},
 		{ dispatch, getState }
 	) => {
@@ -45,14 +45,23 @@ export const createProject = createAsyncThunk(
 			const state = getState() as RootState
 			const round: Round = state.round.lastRound
 
-			// const ipfsUrl: string = await storeObject(round)
+			const bannerHash: string = await storeFile(projectDto.banner)
+			const logoHash: string = await storeFile(projectDto.logo)
+
+			const project: Project = {
+				...projectDto,
+				banner: bannerHash,
+				logo: logoHash
+			}
+
+			const ipfsUrl: string = await storeObject(project)
 
 			const recipientDataObject: RecipientData = {
 				recipientId: address,
 				recipientAddress: ZeroAddress,
 				metadata: {
 					protocol: BigInt(1),
-					pointer: 'ipfs://QmQmQmQmQmQmQmQmQmQmQmQmQm'
+					pointer: ipfsUrl
 				}
 			}
 
